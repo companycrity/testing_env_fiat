@@ -1,0 +1,574 @@
+Encoding: windows-1252
+Detected dtd version 7.5.2101
+VCANdelaPersistorImpl::GetFileVersion: DTD version '7.5.2101' detected
+Loading 'C:\FIASA\FIASA_testconfig_8.5\CDD\Fiasa_326_327_4.00.00.cdd'...
+  dtd version: file 7.5.2101, program 8.2.106
+Document supports the languages (en-US,it)
+Document contains the uptodate languages (en-US)
+Template: Name: FIAT Standard enhanced Diagnostic Protocol on CAN, Qualifier: FIAT_SEDPOC, SaveNo: 21, Label: 1.00.10
+DTC status migration 8.0.1:
+ Setting DTC status mask...
+  take DTC status mask from the "status availability" proxy in positive response of 19 02 service.
+  Bevor merge:
+   [0] test Failed, Convention: optional, Default: supported
+   [1] test Failed This Operation Cycle , Convention: optional, Default: supported
+   [2] pendingDTC, Convention: optional, Default: supported
+   [3] confirmedDTC, Convention: optional, Default: supported
+   [4] test Not Completed Since Last Clear, Convention: optional, Default: supported
+   [5] test Failed Since Last Clear, Convention: optional, Default: supported
+   [6] test Not Completed This Operation Cycle, Convention: optional, Default: supported
+   [7] warningIndicatorRequested, Convention: optional, Default: supported
+  Starting merge...
+  After merge: 
+   [0] test Failed, Convention: optional, Default: supported
+   [1] test Failed This Operation Cycle , Convention: optional, Default: supported
+   [2] pendingDTC, Convention: optional, Default: supported
+   [3] confirmedDTC, Convention: optional, Default: supported
+   [4] test Not Completed Since Last Clear, Convention: optional, Default: supported
+   [5] test Failed Since Last Clear, Convention: optional, Default: supported
+   [6] test Not Completed This Operation Cycle, Convention: optional, Default: supported
+   [7] warningIndicatorRequested, Convention: optional, Default: supported
+end DTC status migration 8.0.1.
+  template data loaded
+  variant 'CommonDiagnostics' loaded
+  variant '_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A' loaded
+DIDs migration 8.1.1:
+ There are Diagnostic instances with semantics 'DID Definition' in the previous format -> start migration.
+ There is DID migration attribute 'DIDNumber81'. Take DID number from this attribute.
+ There is DID migration attribute 'DIDQualifier81'. Take DID qualifier from value of this attribute.
+ There is DID migration attribute 'DIDName81'. Take DID name from value of this attribute.
+ converted Packet data type 'Odometer(1 byte)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/VIN_Odometer/DataRecord'.
+  set DID number to '259'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Odometer' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/VIN_Odometer/DataRecord/Odometer' -> 'Odometer(1 byte)')
+ converted Packet data type 'Common Diagnostics DataRecord 262' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Session_Control_Disabled/DataRecord'.
+  set DID number to '262'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 262' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Session_Control_Disabled/DataRecord/Common_Diagnostics_DataRecord_262' -> 'Common Diagnostics DataRecord 262')
+ converted Packet data type 'Activation Status' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Roe_Activation_State_1/DataRecord'.
+  set DID number to '263'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 263' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Roe_Activation_State_1/DataRecord/Common_Diagnostics_DataRecord_263' -> 'Activation Status')
+ converted Packet data type 'Steering Angle Sensor' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Steering_Angle_Sensor/DataRecord'.
+  set DID number to '2181'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Steering_Angle_Sensor/DataRecord/DID_DATA' -> 'Steering Angle Sensor')
+ converted Packet data type 'Tuning Table' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Tuning_Table/DataRecord'.
+  set DID number to '2777'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Tuning_Table/DataRecord/DID_DATA' -> 'Tuning Table')
+ converted Packet data type 'System Status' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/System_Status/DataRecord'.
+  set DID number to '2778'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'System status' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/System_Status/DataRecord/System_status' -> 'System Status')
+ converted Packet data type 'Driver Torque' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Driver_Torque/DataRecord'.
+  set DID number to '2779'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Driver_Torque/DataRecord/DID_DATA' -> 'Driver Torque')
+ converted Packet data type 'DriveStyleSts_Switch' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/DriveStyleSts_Switch/DataRecord'.
+  set DID number to '2780'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/DriveStyleSts_Switch/DataRecord/DID_DATA' -> 'DriveStyleSts_Switch')
+ converted Packet data type 'Temperature ECU' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Temperature_ECU/DataRecord'.
+  set DID number to '2782'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Temperature_ECU/DataRecord/DID_DATA' -> 'Temperature ECU')
+ converted Packet data type 'Engine Speed 0.25 RPM(2 byte)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Engine_Speed/DataRecord'.
+  set DID number to '4096'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Engine Speed' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Engine_Speed/DataRecord/Engine_Speed' -> 'Engine Speed 0.25 RPM(2 byte)')
+ converted Packet data type 'Vehicle Speed 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Vehicle_Speed/DataRecord'.
+  set DID number to '4098'.
+  set DID qualifier from migration attribute 'DIDQualifier81'.
+  set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 4097' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Vehicle_Speed/DataRecord/Common_Diagnostics_DataRecord_4097' -> 'Vehicle Speed')
+ converted Packet data type 'Battery Voltage 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Battery_Voltage/DataRecord'.
+  set DID number to '4100'.
+  set DID qualifier from migration attribute 'DIDQualifier81'.
+  set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 4100' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Battery_Voltage/DataRecord/Common_Diagnostics_DataRecord_4100' -> 'Battery Voltage')
+ converted Packet data type 'Control Module Voltage (1 Byte)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Control_Module_Voltage/DataRecord'.
+  set DID number to '4102'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 4102' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Control_Module_Voltage/DataRecord/Common_Diagnostics_DataRecord_4102' -> 'Control Module Voltage (1 Byte)')
+ converted Packet data type 'RAM stamps 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/ECU_time_stamps_1/DataRecord'.
+  set DID number to '4104'.
+  set DID qualifier from migration attribute 'DIDQualifier81'.
+  set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'RAM stamps' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/ECU_time_stamps_1/DataRecord/RAM_stamps' -> 'RAM stamps')
+ converted Packet data type 'RAM stamps keyOn 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/ECU_Time_since_Ignition_ON/DataRecord'.
+  set DID number to '4105'.
+  set DID qualifier from migration attribute 'DIDQualifier81'.
+  set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'RAM stamps keyOn' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/ECU_Time_since_Ignition_ON/DataRecord/RAM_stamps_keyOn' -> 'RAM stamps keyOn')
+ converted Packet data type 'EOL CFG Snapshot' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Check_EOL_Configuration_Data/DataRecord'.
+  set DID number to '4138'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 4138' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Check_EOL_Configuration_Data/DataRecord/Common_Diagnostics_DataRecord_4138' -> 'EOL CFG Snapshot')
+ converted Packet data type 'Voltage' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/ADC_Battery_Voltage_1/DataRecord'.
+  set DID number to '4612'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 4133' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/ADC_Battery_Voltage_1/DataRecord/Common_Diagnostics_DataRecord_4133' -> 'Voltage')
+ converted Packet data type 'Voltage (0.001 V/bit 2 byte)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/ADC_Control_Module_Voltage/DataRecord'.
+  set DID number to '4614'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'ADC Control Module Voltage' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/ADC_Control_Module_Voltage/DataRecord/ADC_Control_Module_Voltage' -> 'Voltage (0.001 V/bit 2 byte)')
+ converted Packet data type 'Time of Power Latch' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Time_of_Power_Latch/DataRecord'.
+  set DID number to '6429'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 0' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Time_of_Power_Latch/DataRecord/Common_Diagnostics_DataRecord_0' -> 'Time of Power Latch')
+ converted Packet data type 'Ignition Status ( 4 Byte)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Operational_Mode_Status/DataRecord'.
+  set DID number to '6433'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Ignition Status' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Operational_Mode_Status/DataRecord/Ignition_Status' -> 'Ignition Status ( 4 Byte)')
+ converted Packet data type 'Odometer  (0.0625 Km/bit 3 byte)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Odometer_High_Resolution/DataRecord'.
+  set DID number to '8192'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Odometer' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Odometer_High_Resolution/DataRecord/Odometer' -> 'Odometer  (0.0625 Km/bit 3 byte)')
+ converted Packet data type 'Odometer_Packet 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Odometer/DataRecord'.
+  set DID number to '8193'.
+  set DID qualifier from migration attribute 'DIDQualifier81'.
+  set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8193' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Odometer/DataRecord/Common_Diagnostics_DataRecord_8193' -> 'Odometer_Packet')
+ converted Packet data type 'Odometer content to the last F-ROM updating' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Odometer_content_at_last_Flash_programming/DataRecord'.
+  set DID number to '8194'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Odometer content to the last F-ROM updating' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Odometer_content_at_last_Flash_programming/DataRecord/Odometer_content_to_the_last_F_ROM_updating' -> 'Odometer content to the last F-ROM updating')
+ converted Packet data type 'Number of FlashRom re-writings (F-ROM)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Programming_attempt_counter/DataRecord'.
+  set DID number to '8195'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Number of FlashRom re-writings (F-ROM)' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Programming_attempt_counter/DataRecord/Number_of_FlashRom_re_writings_F_ROM' -> 'Number of FlashRom re-writings (F-ROM)')
+ converted Packet data type 'Number of out of revolution events ' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Number_of_out_of_revolution_events/DataRecord'.
+  set DID number to '8196'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8196' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Number_of_out_of_revolution_events/DataRecord/Common_Diagnostics_DataRecord_8196' -> 'Number of out of revolution events ')
+ converted Packet data type 'Common Diagnostics DataRecord 8197' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Maximum_Engine_Speed_Reached/DataRecord'.
+  set DID number to '8197'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8197' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Maximum_Engine_Speed_Reached/DataRecord/Common_Diagnostics_DataRecord_8197' -> 'Common Diagnostics DataRecord 8197')
+ converted Packet data type 'Maximum engine speed exceeding time counter ' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Maximum_engine_speed_exceeding_time_counter/DataRecord'.
+  set DID number to '8198'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Time' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Maximum_engine_speed_exceeding_time_counter/DataRecord/Time' -> 'Maximum engine speed exceeding time counter ')
+ converted Packet data type 'Odomenter (4 byte)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Odometer_value_overspeed_recognitions/DataRecord'.
+  set DID number to '8199'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8199' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Odometer_value_overspeed_recognitions/DataRecord/Common_Diagnostics_DataRecord_8199' -> 'Odomenter (4 byte)')
+ converted Packet data type 'EEPROM stamps' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/ECU_Life_Time_Not_Volatile_Memory/DataRecord'.
+  set DID number to '8200'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'EEPROM stamps' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/ECU_Life_Time_Not_Volatile_Memory/DataRecord/EEPROM_stamps' -> 'EEPROM stamps')
+ converted Packet data type 'KeyOn counter 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Ignition_On_counter/DataRecord'.
+  set DID number to '8202'.
+  set DID qualifier from migration attribute 'DIDQualifier81'.
+  set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'KeyOn counter' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Ignition_On_counter/DataRecord/KeyOn_counter' -> 'KeyOn counter')
+ converted Packet data type 'EEPROM time of first DTC' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Time_First_DTC_Detection/DataRecord'.
+  set DID number to '8203'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'EEPROM time of first DTC' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Time_First_DTC_Detection/DataRecord/EEPROM_time_of_first_DTC' -> 'EEPROM time of first DTC')
+ converted Packet data type 'EEPROM keyOn time of first DTC' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Time_since_Ignition_on_of_first_DTC_detection/DataRecord'.
+  set DID number to '8204'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'EEPROM keyOn time of first DTC' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Time_since_Ignition_on_of_first_DTC_detection/DataRecord/EEPROM_keyOn_time_of_first_DTC' -> 'EEPROM keyOn time of first DTC')
+ converted Packet data type 'Odometer (16 Km/bit 2 byte)' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Odometer_Last_Clear_DTC_1/DataRecord'.
+  set DID number to '8205'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Odometer' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Odometer_Last_Clear_DTC_1/DataRecord/Odometer' -> 'Odometer (16 Km/bit 2 byte)')
+ converted Packet data type 'ProgrammingStatus' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Programming_Status/DataRecord'.
+  set DID number to '8208'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'New Data Object 3' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Programming_Status/DataRecord/New_Data_Object_3' -> 'ProgrammingStatus')
+ converted Packet data type 'Distance ' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Distance_Travelled_While_MIL_is_Activated/DataRecord'.
+  set DID number to '8209'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Distance Travelled While MIL is Activated' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Distance_Travelled_While_MIL_is_Activated/DataRecord/Distance_Travelled_While_MIL_is_Activated' -> 'Distance ')
+ converted Packet data type 'Response on Event – light activation state' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Response_on_Event_Activation_State/DataRecord'.
+  set DID number to '8210'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8210' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Response_on_Event_Activation_State/DataRecord/Common_Diagnostics_DataRecord_8210' -> 'Response on Event – light activation state')
+ converted Packet data type 'VIN Lock Packed' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/VIN_LOCK_State/DataRecord'.
+  set DID number to '8211'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'VIN LOCK State' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/VIN_LOCK_State/DataRecord/VIN_LOCK_State' -> 'VIN Lock Packed')
+ converted Packet data type 'Erase Routine ' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Erase_Routine_Status/DataRecord'.
+  set DID number to '8212'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Erase Routine Status' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Erase_Routine_Status/DataRecord/Erase_Routine_Status' -> 'Erase Routine ')
+ converted Packet data type 'Distance' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Distance_Travelled_While_High_Coolant_Temperature_Indication_is_Activated/DataRecord'.
+  set DID number to '8213'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Distance Travelled While High Water Temperature Indication is Activated' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Distance_Travelled_While_High_Coolant_Temperature_Indication_is_Activated/DataRecord/Distance_Travelled_While_High_Water_Temperature_Indication_is_Ac' -> 'Distance')
+ converted Packet data type 'oil life reset procedure' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Number_of_oil_life_reset_procedure/DataRecord'.
+  set DID number to '8214'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8214' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Number_of_oil_life_reset_procedure/DataRecord/Common_Diagnostics_DataRecord_8214' -> 'oil life reset procedure')
+ converted Packet data type 'Odometer of oil life' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Odometer_of_oil_life_reset_procedure/DataRecord'.
+  set DID number to '8215'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8215' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Odometer_of_oil_life_reset_procedure/DataRecord/Common_Diagnostics_DataRecord_8215' -> 'Odometer of oil life')
+ converted Packet data type 'Current total value of remaining engine oil expressed as distance ' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Current_total_value_of_remaining_engine_oil_expressed_as_distanc/DataRecord'.
+  set DID number to '8216'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8216' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Current_total_value_of_remaining_engine_oil_expressed_as_distanc/DataRecord/Common_Diagnostics_DataRecord_8216' -> 'Current total value of remaining engine oil expressed as distance ')
+ converted Packet data type 'Odometer value at the starting of a change oil required indication ' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Odometer_value_at_the_starting_of_a_change_oil_required_indicati/DataRecord'.
+  set DID number to '8217'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8217' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Odometer_value_at_the_starting_of_a_change_oil_required_indicati/DataRecord/Common_Diagnostics_DataRecord_8217' -> 'Odometer value at the starting of a change oil required indication ')
+ converted Packet data type 'Wake up reasons recording' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Wake_Up_Reasons_Recording/DataRecord'.
+  set DID number to '8222'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Common Diagnostics DataRecord 8222' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Wake_Up_Reasons_Recording/DataRecord/Common_Diagnostics_DataRecord_8222' -> 'Wake up reasons recording')
+ converted Packet data type 'C.I.S.' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/C_I_S_Codice_Identificativo_scocca/DataRecord'.
+  set DID number to '10540'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'C.I.S.' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/C_I_S_Codice_Identificativo_scocca/DataRecord/C_I_S' -> 'C.I.S.')
+ converted Packet data type 'Virtual event counter' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Aging_counter/DataRecord'.
+  set DID number to '24704'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Virtual event counter' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Aging_counter/DataRecord/Virtual_event_counter' -> 'Virtual event counter')
+ converted Packet data type 'Virtual cycle WL off' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Cycle_To_Switch_Warning_Indication_OFF/DataRecord'.
+  set DID number to '24705'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Virtual cycle WL off' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Cycle_To_Switch_Warning_Indication_OFF/DataRecord/Virtual_cycle_WL_off' -> 'Virtual cycle WL off')
+ converted Packet data type 'Counter ' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Frequency_Counter/DataRecord'.
+  set DID number to '24720'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'Counter' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Frequency_Counter/DataRecord/Counter' -> 'Counter ')
+ converted Packet data type 'DiagnosticSession' to DID as it's used in the 'DID Definition' telegram table 'qpath:/CommonDiagnostics/EngineeringParameters/Active_Diagnostic_Session_Data_Identifier/DataRecord'.
+  set DID number to '61830'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DiagnosticSession' by (DID Reference -> DID):
+  ('qpath:/CommonDiagnostics/EngineeringParameters/Active_Diagnostic_Session_Data_Identifier/DataRecord/DiagnosticSession' -> 'DiagnosticSession')
+ converted Packet data type 'System Status 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/System_Status/DataRecord'.
+  set DID number to '2778'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'System status' by (DID Reference -> DID):
+  ('qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/System_Status/DataRecord/System_status' -> 'System Status 1')
+ converted Packet data type 'Steering Angle Sensor 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/Steering_Angle_Sensor/DataRecord'.
+  set DID number to '2181'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/Steering_Angle_Sensor/DataRecord/DID_DATA' -> 'Steering Angle Sensor 1')
+ converted Packet data type 'Tuning Table 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/Tuning_Table/DataRecord'.
+  set DID number to '2777'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/Tuning_Table/DataRecord/DID_DATA' -> 'Tuning Table 1')
+ converted Packet data type 'Driver Torque 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/Driver_Torque/DataRecord'.
+  set DID number to '2779'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/Driver_Torque/DataRecord/DID_DATA' -> 'Driver Torque 1')
+ converted Packet data type 'DriveStyleSts_Switch 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/DriveStyleSts_Switch/DataRecord'.
+  set DID number to '2780'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/DriveStyleSts_Switch/DataRecord/DID_DATA' -> 'DriveStyleSts_Switch 1')
+ converted Packet data type 'Temperature ECU 1' to DID as it's used in the 'DID Definition' telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/Temperature_ECU/DataRecord'.
+  set DID number to '2782'.
+  cannot set DID qualifier from migration attribute 'DIDQualifier81'.
+  cannot set DID name from migration attribute 'DIDName81'.
+ Replaced Data object 'DID_DATA' by (DID Reference -> DID):
+  ('qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/EngineeringParameters/Temperature_ECU/DataRecord/DID_DATA' -> 'Temperature ECU 1')
+ Packet data type 'Odometer(1 byte)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Attribute 'DIDNumber81' was created.
+  Value was set.
+ Packet data type 'Common Diagnostics DataRecord 262' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Activation Status' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Steering Angle Sensor' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Tuning Table' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'System Status' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Driver Torque' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'DriveStyleSts_Switch' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Temperature ECU' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Engine Speed 0.25 RPM(2 byte)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Vehicle Speed 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Battery Voltage 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Control Module Voltage (1 Byte)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'RAM stamps 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'RAM stamps keyOn 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'EOL CFG Snapshot' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Voltage' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Voltage (0.001 V/bit 2 byte)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Time of Power Latch' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Ignition Status ( 4 Byte)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Odometer  (0.0625 Km/bit 3 byte)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Odometer_Packet 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Odometer content to the last F-ROM updating' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Number of FlashRom re-writings (F-ROM)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Number of out of revolution events ' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Common Diagnostics DataRecord 8197' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Maximum engine speed exceeding time counter ' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Odomenter (4 byte)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'EEPROM stamps' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'KeyOn counter 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'EEPROM time of first DTC' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'EEPROM keyOn time of first DTC' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Odometer (16 Km/bit 2 byte)' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'ProgrammingStatus' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Distance ' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Response on Event – light activation state' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'VIN Lock Packed' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Erase Routine ' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Distance' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'oil life reset procedure' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Odometer of oil life' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Current total value of remaining engine oil expressed as distance ' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Odometer value at the starting of a change oil required indication ' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Wake up reasons recording' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'C.I.S.' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Virtual event counter' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Virtual cycle WL off' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Counter ' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'DiagnosticSession' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'System Status 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Steering Angle Sensor 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Tuning Table 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Driver Torque 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'DriveStyleSts_Switch 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet data type 'Temperature ECU 1' has overridden attribute(s) -> Transfer attribute(s) to DID.
+  Value was set.
+ Packet 'Odometer(1 byte)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Common Diagnostics DataRecord 262' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Activation Status' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Steering Angle Sensor' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Tuning Table' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'System Status' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Driver Torque' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'DriveStyleSts_Switch' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Temperature ECU' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Engine Speed 0.25 RPM(2 byte)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Vehicle Speed 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Battery Voltage 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Control Module Voltage (1 Byte)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'RAM stamps 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'RAM stamps keyOn 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'EOL CFG Snapshot' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Voltage' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Voltage (0.001 V/bit 2 byte)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Time of Power Latch' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Ignition Status ( 4 Byte)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Odometer  (0.0625 Km/bit 3 byte)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Odometer_Packet 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Odometer content to the last F-ROM updating' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Number of FlashRom re-writings (F-ROM)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Number of out of revolution events ' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Common Diagnostics DataRecord 8197' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Maximum engine speed exceeding time counter ' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Odomenter (4 byte)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'EEPROM stamps' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'KeyOn counter 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'EEPROM time of first DTC' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'EEPROM keyOn time of first DTC' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Odometer (16 Km/bit 2 byte)' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'ProgrammingStatus' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Distance ' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Response on Event – light activation state' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'VIN Lock Packed' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Erase Routine ' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Distance' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'oil life reset procedure' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Odometer of oil life' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Current total value of remaining engine oil expressed as distance ' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Odometer value at the starting of a change oil required indication ' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Wake up reasons recording' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'C.I.S.' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Virtual event counter' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Virtual cycle WL off' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Counter ' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'DiagnosticSession' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'System Status 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Steering Angle Sensor 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Tuning Table 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Driver Torque 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'DriveStyleSts_Switch 1' was converted to DID and it's not referenced anymore -> Delete.
+ Packet 'Temperature ECU 1' was converted to DID and it's not referenced anymore -> Delete.
+ Delete Migration attribute 'DIDNumber81'.
+ Delete Migration attribute 'DIDQualifier81'.
+ Delete Migration attribute 'DIDName81'.
+end DIDs migration 8.1.1
+DTC status migration 8.0.1:
+ Store DTC status bits...
+  Store status bits 'qpath:/CommonDiagnostics/FaultMem/DTCStatusMask/DtcStatusDataType'
+  Store status bits 'qpath:/CommonDiagnostics/FaultMem/DTCAvailabilityMask/DtcStatusAvailabilityMask'
+  Store status bits 'qpath:/CommonDiagnostics/FaultMem/StatusOfDtc/DtcStatusDataType'
+  Store status bits 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/FaultMem/DTCStatusMask/DtcStatusDataType'
+  Store status bits 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/FaultMem/DTCAvailabilityMask/DtcStatusAvailabilityMask'
+  Store status bits 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/FaultMem/StatusOfDtc/DtcStatusDataType'
+end DTC status migration 8.0.1.
+DTC status migration 8.0.1:
+ Satisfy constraints...
+  Satisfy constraints for telegram table 'qpath:/CommonDiagnostics/FaultMem/DTCStatusMask'...
+  Satisfy constraints for telegram table 'qpath:/CommonDiagnostics/FaultMem/DTCAvailabilityMask'...
+  Satisfy constraints for telegram table 'qpath:/CommonDiagnostics/FaultMem/StatusOfDtc'...
+  Satisfy constraints for telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/FaultMem/DTCStatusMask'...
+  Satisfy constraints for telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/FaultMem/DTCAvailabilityMask'...
+  Satisfy constraints for telegram table 'qpath:/_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A/FaultMem/StatusOfDtc'...
+end DTC status migration 8.0.1.
+DTC status migration 8.0.1:
+ store the qualifier of old data type in the attribute "OldDtcStatusBitDataTypeQualifier"...
+end DTC status migration 8.0.1.
+Document version: 2
+Done loading.
+Checking consistency of document. This may take a while, please be patient...
+Checking service prefixes in base variant 'CommonDiagnostics' ... OK
+Checking service prefixes in extended variant '_FF_00_00_0002_00D2_P3272_P341_Next_Gen_A' ... OK
+ComParamMan: Unidentified ComParam TesterTgtAllNode
+ComParamMan: Unidentified ComParam MaxDeltaP2Can
+ComParamMan: Unidentified ComParam NL_buffer_NormalCommunication
+ComParamMan: Unidentified ComParam NL_buffer_FlashProgramming
+ComParamMan: Unidentified ComParam Max_Waiting_Time_for_External_Tool
+ComParamMan: Unidentified ComParam Protocol
+ComParamMan: Unidentified ComParam PIN_Number_CAN_HI
+ComParamMan: Unidentified ComParam PIN_Number_CAN_LOW
+Document is consistent.

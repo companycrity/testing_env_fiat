@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<systemvariables version="4">
+  <namespace name="" comment="">
+    <namespace name="MESSAGES" comment="">
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="CRC_BSMOff" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="MessageCounter_BSMOff" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC1_AgingCnt" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC1_DTCnum" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC1_Parameter" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC1_StatusByte" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC2_AgingCnt" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC2_DTCnum" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC2_Parameter" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC2_StatusByte" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC3_AgingCnt" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC3_DTCnum" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC3_Parameter" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="NTC3_StatusByte" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="pnlBCM_COMMAND_disable" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="pnlBSM1_disable" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="pnlMOT1_disable" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="pnlMOT3_disable" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="pnlSTATUS_C_BCM2_disable" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="pnlSTATUS_C_IPC_disable" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="PWMOutputDC" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="ReadSysVar" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarABSandTCStatus" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarAvgTxRate" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarChassisGenStatus1" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarDataLength" comment="" bitcount="32" isSigned="true" encoding="65001" type="int" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarDrvModeControl" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarDrvnWheelGrndVelCE" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarDrvnWheelGrndVelHS" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarEngCntrlReq" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarEngGenStatus4" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarEngineStatus" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarLKASteeringTorqueCmdCE" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarLKASteeringTorqueCmdHS" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarMaxTxRate" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarMinTxRate" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarNonDrvnWheel" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarNonDrvnWheelGrndVelCE" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarNonDrvnWheelGrndVelHS" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarParkAssistParallelCE" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarPowerMode" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarSteeringTorqueCmdCE" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarSWA" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarTransGenStatus" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarVehDynESCHybCE" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarVehSpd" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarVehStability" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarVINDigits10to17" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarVINDigits2to9" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="SysVarWheelPulse" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="VarTime" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" startValue="2000" />
+    </namespace>
+    <namespace name="XCPResponse" comment="">
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="ReturnVal" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" />
+    </namespace>
+  </namespace>
+</systemvariables>

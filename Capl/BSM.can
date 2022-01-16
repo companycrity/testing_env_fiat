@@ -1,0 +1,115 @@
+/*@!Encoding:1252*/
+
+
+variables
+{
+  //message 0x0F2 B1;
+  byte CRC_POLYNOMIAL_8 = 0x1D;
+  byte D_CRCINIT_CNT_U8 = 0xFF;
+  byte D_CRCXORVALUE_CNT_U8 = 0xFF;
+ 	byte crc_value; /* CRC initial value            */
+	
+	byte crc_poly; 
+  
+ byte BSM1Msg_Cnt_T_u8[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+ int cnt;
+	//CalculatedCRCB1 = Crc_CalculateCRC8(BSM1Msg_Cnt_T_u8, 7U, D_CRCINIT_CNT_U8);
+	
+}
+
+on start
+{
+  $MessageCounter_B1 = 0;
+  $ABSActive = 0;
+  $CRC_B1 = 0;
+  $ESCActive = 0;
+  $MasterCylinderPressure = 0;
+  $VehicleSpeedVSOSig = 0;
+  $VehicleSpeedVSOSigFailSts = 0;
+  
+  cnt =0;
+  ILActivateClamp15();
+
+}
+
+
+// Update message counter and CRC values
+on message BSM1
+{
+  int i;
+   
+   for (i=0;i<8;i++){
+    BSM1Msg_Cnt_T_u8[i] = this.byte(i);
+  //  write("byte%d=%x",i,BSM1Msg_Cnt_T_u8[i]);
+  }
+  if (@sysvar::MESSAGES::MessageCounter_BSMOff== 0){
+    if (cnt!=0xF)
+      cnt = cnt+1;
+    else
+      cnt = 0;
+  }
+  BSM1Msg_Cnt_T_u8[6] = cnt;
+ 
+
+  if (@sysvar::MESSAGES::CRC_BSMOff == 0)
+    $CRC_B1 = calculateCRC(BSM1Msg_Cnt_T_u8,7,D_CRCINIT_CNT_U8);
+  else
+    $CRC_B1 = 0;
+  
+  
+     $MessageCounter_B1 = cnt;
+//  else
+//    $MessageCounter_B1 = 0;
+
+}
+
+
+byte calculateCRC(byte BSM1Msg_Cnt_T_u8[], int Crc_Length, byte Crc_StartValue)
+{
+
+	int i;
+  byte crc_cur;
+  crc_poly = CRC_POLYNOMIAL_8;
+  crc_value = Crc_StartValue;
+  
+	
+	/* To calculate manualy the check value, following polynom division should be done:
+	 * the data sequence (e.g. default ASCII string 123456789) in hex value: 0x31 32 33 34 35 36 37 38 39
+	 * should be divided by the polynom 0x1d --> the remainder of this division in hex is 37 (= check value).
+	 * The next line represents this polynom division:
+	 * 00110001 00110010... : 11101 -> check value = 0011 1110 (= 0x37)
+	 */
+	while (Crc_Length --)
+	{
+	  crc_cur = BSM1Msg_Cnt_T_u8[6-Crc_Length]; /*current data pointer*/
+  //  write("crc_cur=%x; Crc_Lenght=%d\n",crc_cur,Crc_Length);
+		for (i=0;i<8;i++)
+		{
+			if ( (crc_value & 0x80) == (crc_cur & 0x80) )
+			{
+				crc_value = (crc_value << 1);
+			}
+			else
+			{
+				crc_value = (crc_value << 1) ^ crc_poly;
+			}
+			crc_cur = (crc_cur << 1);
+		}
+	}
+  
+  
+	crc_value^=D_CRCXORVALUE_CNT_U8;
+//  write("crc_value=%x",crc_value);
+  return crc_value;
+}
+
+//Update message transmit status based on value of system variable - for panel
+on sysvar MESSAGES::pnlBSM1_disable
+{
+   if (@MESSAGES::pnlBSM1_disable == 1)
+      ILDisableMsg("BSM1");
+    else
+      ILEnableMsg("BSM1");
+        
+}
+

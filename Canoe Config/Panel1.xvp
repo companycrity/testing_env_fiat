@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Panel Type="Vector.CANalyzer.Panels.PanelSerializer, Vector.CANalyzer.Panels.Serializer, Version=8.2.98.0, Culture=neutral, PublicKeyToken=null">
+  <Object Type="Vector.CANalyzer.Panels.Runtime.Panel, Vector.CANalyzer.Panels.Common, Version=8.2.98.0, Culture=neutral, PublicKeyToken=null" Name="Panel" Children="Controls" ControlName="Panel1">
+    <Object Type="Vector.CANalyzer.Panels.Design.TextBoxControl, Vector.CANalyzer.Panels.CommonControls, Version=8.2.98.0, Culture=neutral, PublicKeyToken=null" Name="TextBoxControl1" Children="Controls" ControlName="Input/Output Box">
+      <Property Name="Name">TextBoxControl1</Property>
+      <Property Name="Size">210, 20</Property>
+      <Property Name="Location">13, 97</Property>
+      <Property Name="AlarmUpperTextColor">WindowText</Property>
+      <Property Name="ValueDecimalPlaces">0</Property>
+      <Property Name="AlarmLowerBkgColor">Salmon</Property>
+      <Property Name="ValueDisplay">Symbolic</Property>
+      <Property Name="AlarmUpperBkgColor">IndianRed</Property>
+      <Property Name="AlarmLowerTextColor">WindowText</Property>
+      <Property Name="AlarmUpperFont">Microsoft Sans Serif, 8.25pt</Property>
+      <Property Name="AlarmGeneralSettings">1;0;0;100</Property>
+      <Property Name="DisplayLabel">Left</Property>
+      <Property Name="DescriptionText">OperationalModeSts:</Property>
+      <Property Name="AlarmLowerFont">Microsoft Sans Serif, 8.25pt</Property>
+      <Property Name="ValueType">RawValue</Property>
+      <Property Name="DescriptionSize">111, 20</Property>
+      <Property Name="SymbolConfiguration">4;2;CCAN;BCM;BCM_COMMAND;OperationalModeSts;1;CCAN;;-1</Property>
+      <Property Name="TabIndex">1</Property>
+    </Object>
+    <Object Type="Vector.CANalyzer.Panels.Design.StartStopControl, Vector.CANalyzer.Panels.CommonControls, Version=8.2.98.0, Culture=neutral, PublicKeyToken=null" Name="StartStopControl1" Children="Controls" ControlName="Start Stop Control">
+      <Property Name="Name">StartStopControl1</Property>
+      <Property Name="Size">112, 56</Property>
+      <Property Name="Location">13, 13</Property>
+      <Property Name="TabIndex">0</Property>
+    </Object>
+    <Property Name="Name">Panel</Property>
+    <Property Name="Size">804, 457</Property>
+  </Object>
+</Panel>

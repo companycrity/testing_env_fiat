@@ -1,0 +1,44 @@
+/*@!Encoding:1252*/
+
+
+on start
+{
+
+  //ILNodeControlStart(1);
+
+//GMILActivateVN(1);
+  //GMILActivateVN(1);
+//IlActivateVN(1);
+  ILActivateClamp15();
+//  $BCMFpsCommand =0; 
+//  $BCMFpsConfirm =0;
+//  $BCMFpsFailSts =0;
+//  $BrakePedalSwitchNCFailSts =0;
+//  $BrakePedalSwitchNCSts =0;
+//  $BrakePedalSwitchNOFailSts =0;
+//  $BrakePedalSwitchNOSts =0;
+//  $CRC_BC =0;
+//  $KeyInIgnSts =0;
+//  $MessageCounter_BC =0;
+//  $OperationalModeSts =0;
+//  $TurnIndicatorSts =0;
+  
+}
+
+on sysvar MESSAGES::pnlBCM_COMMAND_disable
+{
+   if (@MESSAGES::pnlBCM_COMMAND_disable == 1)
+      ILDisableMsg("BCM_COMMAND");
+    else
+      ILEnableMsg("BCM_COMMAND");
+        
+}
+
+on sysvar MESSAGES::pnlSTATUS_C_BCM2_disable
+{
+   if (@MESSAGES::pnlSTATUS_C_BCM2_disable == 1)
+      ILDisableMsg("STATUS_C_BCM2");
+    else
+      ILEnableMsg("STATUS_C_BCM2");
+        
+}

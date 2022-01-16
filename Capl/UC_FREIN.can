@@ -1,0 +1,106 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+  int x, quartet;
+  int CHK_INI = 8;
+  int chksum;
+  message CAN1.IS_DYN_ABR_38D VehSpdMsg;
+  
+  byte CHKSUM_TRME_DYN_UC_FREIN_Value;
+  byte CPT_PROCESS_4B_UC_FREIN_Value;
+  word VITESSE_VEHICULE_ROUES_Value;
+  byte VITESSE_VEHICULE_ROUES_Byte1;
+  byte VITESSE_VEHICULE_ROUES_Byte2;
+ // msTimer timer40;
+}
+
+
+
+
+
+
+
+dword applILTxPending(long aId, dword aDlc, byte data[])
+{
+      byte i,x, ctr;
+      byte CHK_INI =7;
+  
+ // if(chksum == 1)
+ //   {
+//      if(aId == 0x38D)
+//      {
+//             //Calculate Checksum
+//            x=0;
+//            for (i=0;i < aDlc ;i++)
+//            {
+//                  x = x%16 +(data[i] & (0x0f));
+//            }
+//            for (i=0;i < aDlc ;i++)
+//            {
+//                  x = x%16 +((data[i] & 0xF0)/16);
+//            }
+//            x = 0xF-((x - CHK_INI - (data[5] & 0x0F))%16) ;
+//            data[5] = x;
+//      
+//            //Calculate Counter
+//            ctr++;
+// 
+//            if (ctr > 15)
+//            {
+//            ctr = 0;
+//            } 
+//    
+//            data[5] = (ctr << 4) + data[5]; 
+//      }
+//  return 1;
+  
+  // if(chksum == 1)
+// {
+if(aId == 0x38D)
+{
+    if(@sysvar::SIGNALS::CPT_PROCESS_4B_UC_FREIN_Cnt == 1)
+    {
+        //Calculate Checksum
+        x=0;
+        for (i=0;i < aDlc ;i++)
+        {
+        x = x%16 +(data[i] & (0x0f));
+        }
+        for (i=0;i < aDlc ;i++)
+        {
+        x = x%16 +((data[i] & 0xF0)/16);
+        }
+        x = 0xF-((x - CHK_INI - (data[5] & 0x0F))%16) ;
+        data[5] = x;
+
+        //Calculate Counter
+        if(@sysvar::SIGNALS::CHKSUM_TRME_DYN_UC_FREIN_Cnt == 1)
+        {
+              ctr++;
+
+              if (ctr > 15)
+              {
+              ctr = 0;
+              }
+
+              data[5] = (ctr << 4) + data[5];
+              return 1.0;
+        }      
+        return 2;
+    }
+    else
+    {
+      return 2;
+    }
+
+  }
+  
+}
+
+
+

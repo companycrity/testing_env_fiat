@@ -1,0 +1,307 @@
+[15:41:55] - Tx	22 0A DA 0A D9 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55 F1 93 F1 95
+[15:41:55]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:41:55]	Negative response:
+    Response Code	    Incorrect message length or invalid format
+[15:41:55]	Device 'Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1' is online.
+[15:42:09] - Tx	22 0A DA 0A D9 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55 F1 93
+[15:42:09]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:42:09]	Error when processing of response message ('Primitive has invalid length')!
+[15:42:09] - Rx	Positive response:
+[15:42:09] - Rx	 62 0A DA 08 0A D9 03 F1
+[15:42:09] - Rx	 86 01 19 21 00 00 00 00
+[15:42:09] - Rx	 00 00 00 00 00 20 10 F9
+[15:42:09] - Rx	 20 14 00 F1 0D 82 81 81
+[15:42:09] - Rx	 81 F1 54 00 D2 F1 55 00
+[15:42:09] - Rx	 D2 F1 93 33
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:42:21] - Tx	22 0A DA 0A D9 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55
+[15:42:21]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:42:21]	Error when processing of response message ('Primitive has invalid length')!
+[15:42:21] - Rx	Positive response:
+[15:42:21] - Rx	 62 0A DA 08 0A D9 03 F1
+[15:42:21] - Rx	 86 01 19 21 00 00 00 00
+[15:42:21] - Rx	 00 00 00 00 00 20 10 F9
+[15:42:21] - Rx	 20 14 00 F1 0D 82 81 81
+[15:42:21] - Rx	 81 F1 54 00 D2 F1 55 00
+[15:42:21] - Rx	 D2
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:42:31] - Tx	22 0A DA 0A D9 F1 86 19 21 20 10 20 14 F1 0D F1 54
+[15:42:31]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:42:31]	Error when processing of response message ('Primitive has invalid length')!
+[15:42:31] - Rx	Positive response:
+[15:42:31] - Rx	 62 0A DA 08 0A D9 03 F1
+[15:42:31] - Rx	 86 01 19 21 00 00 00 00
+[15:42:31] - Rx	 00 00 00 00 00 20 10 F9
+[15:42:31] - Rx	 20 14 00 F1 0D 82 81 81
+[15:42:31] - Rx	 81 F1 54 00 D2
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:42:38] - Tx	22 0A DA 0A D9 F1 86 19 21 20 10 20 14 F1 0D
+[15:42:38]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:42:38]	Error when processing of response message ('Primitive has invalid length')!
+[15:42:38] - Rx	Positive response:
+[15:42:38] - Rx	 62 0A DA 08 0A D9 03 F1
+[15:42:38] - Rx	 86 01 19 21 00 00 00 00
+[15:42:38] - Rx	 00 00 00 00 00 20 10 F9
+[15:42:38] - Rx	 20 14 00 F1 0D 82 81 81
+[15:42:38] - Rx	 81
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:42:45] - Tx	22 0A DA 0A D9 F1 86 19 21 20 10 20 14
+[15:42:45]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:42:45]	Error when processing of response message ('Primitive has invalid length')!
+[15:42:45] - Rx	Positive response:
+[15:42:45] - Rx	 62 0A DA 08 0A D9 03 F1
+[15:42:45] - Rx	 86 01 19 21 00 00 00 00
+[15:42:45] - Rx	 00 00 00 00 00 20 10 F9
+[15:42:45] - Rx	 20 14 00
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:42:52] - Tx	22 0A DA 0A D9 F1 86 19 21 20 10
+[15:42:52]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:42:52]	Error when processing of response message ('Primitive has invalid length')!
+[15:42:52] - Rx	Positive response:
+[15:42:52] - Rx	 62 0A DA 08 0A D9 03 F1
+[15:42:52] - Rx	 86 01 19 21 00 00 00 00
+[15:42:52] - Rx	 00 00 00 00 00 20 10 F9
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:42:59] - Tx	22 0A DA 0A D9 F1 86 19 21
+[15:42:59]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:42:59]	Error when processing of response message ('Primitive has invalid length')!
+[15:42:59] - Rx	Positive response:
+[15:42:59] - Rx	 62 0A DA 08 0A D9 03 F1
+[15:42:59] - Rx	 86 01 19 21 00 00 00 00
+[15:42:59] - Rx	 00 00 00 00 00
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:43:06] - Tx	22 0A DA 0A D9 F1 86
+[15:43:06]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:43:06]	Error when processing of response message ('Primitive has invalid length')!
+[15:43:06] - Rx	Positive response:
+[15:43:06] - Rx	 62 0A DA 08 0A D9 03 F1
+[15:43:06] - Rx	 86 01
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:43:12] - Tx	22 0A DA 0A D9
+[15:43:12]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:43:12]	Error when processing of response message ('Primitive has invalid length')!
+[15:43:12] - Rx	Positive response:
+[15:43:12] - Rx	 62 0A DA 08 0A D9 03
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:43:16] - Tx	22 0A DA
+[15:43:16]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:43:16] - Rx	Positive response:
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:43:18] - Tx	22 0A DA
+[15:43:18]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[15:43:18] - Rx	Positive response:
+    System status	    0x08
+        Status_1	    0x08
+            Status_1.Dynamic Steering Torque (DST) Status	    NOT requested
+            Status_1.Dynamic Steering Torque (DST) Vehicle Operative Conditions	    Not passed
+            Status_1.EPS DST Internal Operative Conditions	    Not passed
+            Status_1.Angle Sensor Type	    Absolute sensor
+            Status_1.Motor Type	    Small
+            Status_1.Lamp Command	    OFF
+            Status_1.(gap)	    (0x00)
+[15:43:20]	Device 'Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1' is offline.
+[16:44:59] - Tx	Vehicle Identification Read
+[16:44:59]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:44:59] - Rx	Positive response:
+    Model Year	    2015
+    Vehicle Line Configuration	    0x34
+    Car Shape Configuration	    0x07
+    Country Code	    0x0F
+[16:44:59]	Device 'Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1' is online.
+[16:45:45]	Device 'Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1' is offline.
+[16:47:23] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55 F1 93 F1 95 F1 58 20 03
+[16:47:25]	Timeout - No response message received within expected timeframe!
+[16:47:29]	Device 'Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1' is online.
+[16:47:29] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55 F1 93 F1 95 F1 58 20 03
+[16:47:29]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:47:29]	Negative response:
+    Response Code	    Incorrect message length or invalid format
+[16:47:37] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55 F1 93 F1 95 F1 58
+[16:47:37]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:47:37]	Error when processing of response message ('Primitive has invalid length')!
+[16:47:37] - Rx	Positive response:
+[16:47:37] - Rx	 62 F1 86 01 19 21 00 00
+[16:47:37] - Rx	 00 00 00 00 00 00 00 20
+[16:47:37] - Rx	 10 F9 20 14 00 F1 0D 82
+[16:47:37] - Rx	 81 81 81 F1 54 00 D2 F1
+[16:47:37] - Rx	 55 00 D2 F1 93 33 F1 95
+[16:47:37] - Rx	 00 31 F1 58 0F 34 07 0F
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:47:44] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55 F1 93 F1 95
+[16:47:44]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:47:44]	Error when processing of response message ('Primitive has invalid length')!
+[16:47:44] - Rx	Positive response:
+[16:47:44] - Rx	 62 F1 86 01 19 21 00 00
+[16:47:44] - Rx	 00 00 00 00 00 00 00 20
+[16:47:44] - Rx	 10 F9 20 14 00 F1 0D 82
+[16:47:44] - Rx	 81 81 81 F1 54 00 D2 F1
+[16:47:44] - Rx	 55 00 D2 F1 93 33 F1 95
+[16:47:44] - Rx	 00 31
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:47:50] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55 F1 93
+[16:47:50]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:47:50]	Error when processing of response message ('Primitive has invalid length')!
+[16:47:50] - Rx	Positive response:
+[16:47:50] - Rx	 62 F1 86 01 19 21 00 00
+[16:47:50] - Rx	 00 00 00 00 00 00 00 20
+[16:47:50] - Rx	 10 F9 20 14 00 F1 0D 82
+[16:47:50] - Rx	 81 81 81 F1 54 00 D2 F1
+[16:47:50] - Rx	 55 00 D2 F1 93 33
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:47:55] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55
+[16:47:55]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:47:55]	Error when processing of response message ('Primitive has invalid length')!
+[16:47:55] - Rx	Positive response:
+[16:47:55] - Rx	 62 F1 86 01 19 21 00 00
+[16:47:55] - Rx	 00 00 00 00 00 00 00 20
+[16:47:55] - Rx	 10 F9 20 14 00 F1 0D 82
+[16:47:55] - Rx	 81 81 81 F1 54 00 D2 F1
+[16:47:55] - Rx	 55 00 D2
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:47:59] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D F1 54 F1 55
+[16:47:59]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:47:59]	Error when processing of response message ('Primitive has invalid length')!
+[16:47:59] - Rx	Positive response:
+[16:47:59] - Rx	 62 F1 86 01 19 21 00 00
+[16:47:59] - Rx	 00 00 00 00 00 00 00 20
+[16:47:59] - Rx	 10 F9 20 14 00 F1 0D 82
+[16:47:59] - Rx	 81 81 81 F1 54 00 D2 F1
+[16:47:59] - Rx	 55 00 D2
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:48:06] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D F1 54
+[16:48:06]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:48:06]	Error when processing of response message ('Primitive has invalid length')!
+[16:48:06] - Rx	Positive response:
+[16:48:06] - Rx	 62 F1 86 01 19 21 00 00
+[16:48:06] - Rx	 00 00 00 00 00 00 00 20
+[16:48:06] - Rx	 10 F9 20 14 00 F1 0D 82
+[16:48:06] - Rx	 81 81 81 F1 54 00 D2
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:48:10] - Tx	22 F1 86 19 21 20 10 20 14 F1 0D
+[16:48:10]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:48:10]	Error when processing of response message ('Primitive has invalid length')!
+[16:48:10] - Rx	Positive response:
+[16:48:10] - Rx	 62 F1 86 01 19 21 00 00
+[16:48:10] - Rx	 00 00 00 00 00 00 00 20
+[16:48:10] - Rx	 10 F9 20 14 00 F1 0D 82
+[16:48:10] - Rx	 81 81 81
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:48:15] - Tx	22 F1 86 19 21 20 10 20 14
+[16:48:15]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:48:15]	Error when processing of response message ('Primitive has invalid length')!
+[16:48:15] - Rx	Positive response:
+[16:48:15] - Rx	 62 F1 86 01 19 21 00 00
+[16:48:15] - Rx	 00 00 00 00 00 00 00 20
+[16:48:15] - Rx	 10 F9 20 14 00
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:48:18] - Tx	22 F1 86 19 21 20 10
+[16:48:18]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:48:18]	Error when processing of response message ('Primitive has invalid length')!
+[16:48:18] - Rx	Positive response:
+[16:48:18] - Rx	 62 F1 86 01 19 21 00 00
+[16:48:18] - Rx	 00 00 00 00 00 00 00 20
+[16:48:18] - Rx	 10 F9
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:48:22] - Tx	22 F1 86 19 21
+[16:48:22]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:48:22]	Error when processing of response message ('Primitive has invalid length')!
+[16:48:22] - Rx	Positive response:
+[16:48:22] - Rx	 62 F1 86 01 19 21 00 00
+[16:48:22] - Rx	 00 00 00 00 00 00 00
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:48:26] - Tx	22 F1 86
+[16:48:26]	Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1
+[16:48:26] - Rx	Positive response:
+    DiagnosticSession	    0x01
+        Active diagnostic session data identifier	    default session
+[16:48:33]	Device 'Nexteer_Electric_Power_Steering_P3272_P341_Next_Gen_A_1' is offline.

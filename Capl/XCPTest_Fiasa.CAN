@@ -1,0 +1,1711 @@
+/*@!Encoding:1252*/
+variables
+{
+    char gMcdModule[50] = "ChryslerDS";
+    int  gTaskID = 1;
+    int  gPollRate = 2;
+    int x, quartet;
+    
+    //Tester Present Activate
+    int gTesterPresent;
+    int gActivateTP;
+    //CAN Tester Present variables
+    int gActivateTPCAN; 
+    int gTesterPresentCAN;
+    
+    //Flags for DLC receive test functions
+  int gFlag115DLC = 0;
+  int gFlag2F5DLC = 0;
+  int gFlag495DLC = 0;
+  int gFlag695DLC = 0;
+  int gFlag795DLC = 0;
+  int gFlag7FFDLC = 0;
+  int gFlag7B0DLC = 0;
+  
+  int DLCCount = 0;
+  int DLCCountError = 0;
+  //Constant for DLC length
+  int DLCLENGTH;
+  
+  //CAN message for read DTCs and F009 service
+  message 0x18DA30F1 diagReq;
+  message 0x18DBFEF1 diagReqFunctional;
+  message 0x18DAF130 diagReturn;
+  
+  //Variables for Message Rates
+
+    //ID of message to test
+    int getCANID = 0;
+
+    //The number of message smaples to test over
+    long TotalCnt = 0;
+
+    //max time to mwait for message (timeout) in milliseconds
+    int TimeOut = 0;
+
+    //This value is set when message is recieved
+    int GotMessage = 0;
+
+    //time of message
+    float Previous_Message_Time = 0;
+    float Message_Time = 0;
+    float Current_Message_Rate = 0;
+    float Sum_Message_Rate = 0;
+    float Running_Average_Message_Rate = 0;
+    float Maximum_Message_Rate = 0;
+    float Minimum_Message_Rate = 0;
+
+    //counts the message samples
+    int SampleCounter = 0;
+  
+    //*********************************************
+   
+  
+  //Functional Diagnostic Message $7FF
+  int rateMsecs_18DBFEF1; 
+  message DIAGNOSTIC_REQ_FUNC FunctionalMsg_18DBFEF1h;
+  msTimer timer_18DBFEF1h;
+   
+  message CAN1.IS_DYN_ABR_38D VehSpdMsg;
+  byte CHKSUM_TRME_DYN_UC_FREIN_Value;
+  byte CPT_PROCESS_4B_UC_FREIN_Value;
+  word VITESSE_VEHICULE_ROUES_Value;
+  byte VITESSE_VEHICULE_ROUES_Byte1;
+  byte VITESSE_VEHICULE_ROUES_Byte2;
+  
+  //Input variables
+  byte Input00 = 0;
+  byte Input01 = 0;
+  byte Input02 = 0;
+  byte Input03 = 0;
+  byte Input04 = 0;
+  byte Input05 = 0;
+  byte Input06 = 0;
+  byte Input07 = 0;
+  //Receive message flag for on message 
+  int RxNRCFlag = 0;
+  byte ExpectedResponse00 = 0;
+  byte ExpectedResponse01 = 0;
+  byte ExpectedResponse02 = 0;
+  //Variables for long CAN message length logic
+  float NumberOfMsgsNRCTemp = 0.0;
+  int   NumberOfMsgsNRC = 0;
+  float MsgLength = 0.0;
+  //Constants for extra CAN messages
+  byte MSG_2_BYTE_0  = 0x21;
+  byte MSG_3_BYTE_0  = 0x22;
+  byte MSG_4_BYTE_0  = 0x23;
+  byte MSG_5_BYTE_0  = 0x24;
+  byte MSG_6_BYTE_0  = 0x25;
+  byte MSG_7_BYTE_0  = 0x26;
+  byte MSG_8_BYTE_0  = 0x27;
+  byte MSG_9_BYTE_0  = 0x28;
+  byte MSG_10_BYTE_0 = 0x29;
+  byte MSG_11_BYTE_0 = 0x2A;
+  byte MSG_12_BYTE_0 = 0x2B;
+  byte MSG_13_BYTE_0 = 0x2C;
+  byte MSG_14_BYTE_0 = 0x2D;
+  byte MSG_15_BYTE_0 = 0x2E;
+  byte BYTE_ALL_ZERO = 0x00;
+  dword testReport01,testReport02, testReport03, testReport04,
+       testReport05, testReport06, testReport07, testReport08;
+     
+}
+
+
+
+on timer timer_18DBFEF1h
+{
+    FunctionalMsg_18DBFEF1h.byte(0) = 2;
+    FunctionalMsg_18DBFEF1h.byte(1) = 0x3E;
+    FunctionalMsg_18DBFEF1h.byte(2) = 0x00;
+	  
+    output(FunctionalMsg_18DBFEF1h);	
+    /*re-charge the timer*/
+   // setTimer(timer_441h,rateMsecs_441);
+}
+ControlFunctionalMsg_0x18DBFEF1(int var_RequestedStatus, int rateMsecs)
+{
+  /*store value in global variable*/
+  rateMsecs_18DBFEF1 = rateMsecs;
+
+	if (var_RequestedStatus)
+  {
+    /*Activate CAN message*/
+    setTimer(timer_18DBFEF1h,rateMsecs_18DBFEF1);
+  }
+  else{
+    /*DeActivate CAN message*/
+    canceltimer(timer_18DBFEF1h);
+  }  
+}
+
+testfunction EnableCANmsg18DBFEF1_timer()
+{
+	ControlFunctionalMsg_0x18DBFEF1(0x01,100);
+}
+
+testfunction DisableCANmsg18DBFEF1_timer()
+{
+	ControlFunctionalMsg_0x18DBFEF1(0x00,100);
+}
+
+testfunction TesterPresent(int gTesterPresent)
+{
+  gActivateTP = gTesterPresent;
+  
+	if (gActivateTP == 1)
+  {
+    if (diagStartTesterPresent("DIRA_UDS") == 1)
+    {
+      write("TP Off");
+    }
+    
+  }
+  if (gActivateTP == 0)
+  { 
+    if (diagStopTesterPresent("DIRA_UDS") == 1)
+    {
+      write("TP On");
+    }
+  }
+}
+testfunction ExecuteNegativeResponse(char In_00[], char In_01[], char In_02[], char In_03[], char In_04[], char In_05[], char In_06[], char In_07[], char NRC[])
+{
+	//Execute CAN diagnostic command from input bytes and expect the NRC give in the input
+  //If NRC 0x13 for large length, excess bytes will input how many extra bytes of 0x00 
+  //should be added to the diagnostic request.
+  //If the correct NRC is returned then the test step will pass
+  //Initialize data all zeros
+  /*byte Input00 = 0;
+  byte Input01 = 0;
+  byte Input02 = 0;
+  byte Input03 = 0;
+  byte Input04 = 0;
+  byte Input05 = 0;
+  byte Input06 = 0;
+  byte Input07 = 0; */
+  
+  //Change data type
+  Input00 = atol(In_00);
+  Input01 = atol(In_01);
+  Input02 = atol(In_02);
+  Input03 = atol(In_03);
+  Input04 = atol(In_04);
+  Input05 = atol(In_05);
+  Input06 = atol(In_06);
+  Input07 = atol(In_07);
+  
+  //If the length is only one CAN message
+  if (Input00 != 0x10)
+  {
+      //Set expected response
+      ExpectedResponse00 = 0x7F;
+      ExpectedResponse01 = Input01;
+      ExpectedResponse02 = atol(NRC);
+      
+      //Set Flag to look for response
+      RxNRCFlag = 1;
+      TestWaitforTimeout(2000);
+      //Build CAN Diagnostic Message and Send it
+      diagReq.DLC = 8;
+      diagReq.CAN = 1;
+      diagReq.BYTE(0) = Input00;
+      diagReq.BYTE(1) = Input01;
+      diagReq.BYTE(2) = Input02;
+      diagReq.BYTE(3) = Input03;
+      diagReq.BYTE(4) = Input04;
+      diagReq.BYTE(5) = Input05;
+      diagReq.BYTE(6) = Input06;
+      diagReq.BYTE(7) = Input07;
+      output(diagReq);
+      
+      //Wait for resonse 
+      while (RxNRCFlag != 0)
+      {
+      TestWaitforTimeout(1000);
+      }
+      
+      
+      //Read response from global variables
+      //If the response is correct then test passes
+      if ((testReport02 == ExpectedResponse00) & (testReport03 == ExpectedResponse01) & (testReport04 == ExpectedResponse02))
+      {
+        TestStepPass("1.0", "Correct negative response of %X %X %X",
+                            testReport02, testReport03, testReport04);
+      }
+      else
+      {
+        TestStepFail("1.0", "Incorrect negative response of %X %X %X",
+                            testReport02, testReport03, testReport04);
+      }
+         
+      //Disable Flag
+      RxNRCFlag = 0;
+  }
+  else
+  {
+    //Set expected response
+      ExpectedResponse00 = 0x7F;
+      ExpectedResponse01 = Input02;
+      ExpectedResponse02 = atol(NRC);
+      
+    //To find total number of 8-Byte CAN messages needed
+    MsgLength = Input01 + 1;
+    
+    //Each message has one byte of length info and 7 bytes of data
+    //Find necessary number of messages depending on length of data
+    NumberOfMsgsNRCTemp = _ceil(MsgLength / 7);
+    
+    //Change data type for switch statement
+    NumberOfMsgsNRC = NumberOfMsgsNRCTemp;
+    
+    //Execute function switch statement to send large CAN diag request
+    SendLargeLengthDiagRequest();
+    
+    //Wait for resonse 
+      while (RxNRCFlag != 0)
+      {
+      TestWaitforTimeout(1000);
+      }
+      
+      
+      //Read response from global variables
+      //If the response is correct then test passes
+      if ((testReport02 == ExpectedResponse00) & (testReport03 == ExpectedResponse01) & (testReport04 == ExpectedResponse02))
+      {
+        TestStepPass("1.0", "Correct negative response of %X %X %X",
+                            testReport02, testReport03, testReport04);
+      }
+      else
+      {
+        TestStepFail("1.0", "Incorrect negative response of %X %X %X",
+                            testReport02, testReport03, testReport04);
+      }
+         
+      //Disable Flag
+      RxNRCFlag = 0;
+    
+    
+    
+  } //End else
+  
+ }  //End test function
+
+
+
+
+
+
+
+on key 's'
+{
+      long channel =1;
+      long silent =0;
+   canSetChannelOutput(channel,silent);
+   Write("silent set to %d",silent);
+}
+
+on message IS_REQ_DIAG_ON_CAN_6B5
+{
+	//NRC Test
+  if (RxNRCFlag == 1)
+  {
+        
+          testReport01 = this.Byte(0);
+          testReport02 = this.Byte(1);
+          testReport03 = this.Byte(2);
+          testReport04 = this.Byte(3);
+          testReport05 = this.Byte(4);
+          testReport06 = this.Byte(5);
+          testReport07 = this.Byte(6);
+          testReport08 = this.Byte(7);
+    write("Rx message is %X %X %X %X %X %X %X %X", testReport01, testReport02,
+          testReport03, testReport04, testReport05, testReport06, testReport07, testReport08);
+    
+    //Disable flag
+    RxNRCFlag = 0;
+  }
+  else
+  {
+    //Do nothing
+  }
+}
+void SendLargeLengthDiagRequest()
+{
+  //Use with ExecuteNegativeResponse test function
+  //All global variables
+	//Switch statement to build CAN messages
+    switch(NumberOfMsgsNRC)
+    {
+      case 2: 
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+                  
+        break;
+      
+      case 3:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 4:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 5:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 6:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 7:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 8:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        //Msg 8
+        diagReq.BYTE(0) = MSG_8_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 9:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        //Msg 8
+        diagReq.BYTE(0) = MSG_8_BYTE_0;
+        output(diagReq);
+        //Msg 9
+        diagReq.BYTE(0) = MSG_9_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 10:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        //Msg 8
+        diagReq.BYTE(0) = MSG_8_BYTE_0;
+        output(diagReq);
+        //Msg 9
+        diagReq.BYTE(0) = MSG_9_BYTE_0;
+        output(diagReq);
+        //Msg 10
+        diagReq.BYTE(0) = MSG_10_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break; 
+        
+      case 11:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        //Msg 8
+        diagReq.BYTE(0) = MSG_8_BYTE_0;
+        output(diagReq);
+        //Msg 9
+        diagReq.BYTE(0) = MSG_9_BYTE_0;
+        output(diagReq);
+        //Msg 10
+        diagReq.BYTE(0) = MSG_10_BYTE_0;
+        output(diagReq);
+        //Msg 11
+        diagReq.BYTE(0) = MSG_11_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break; 
+        
+      case 12:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        //Msg 8
+        diagReq.BYTE(0) = MSG_8_BYTE_0;
+        output(diagReq);
+        //Msg 9
+        diagReq.BYTE(0) = MSG_9_BYTE_0;
+        output(diagReq);
+        //Msg 10
+        diagReq.BYTE(0) = MSG_10_BYTE_0;
+        output(diagReq);
+        //Msg 11
+        diagReq.BYTE(0) = MSG_11_BYTE_0;
+        output(diagReq);
+        //Msg 12
+        diagReq.BYTE(0) = MSG_12_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 13:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        //Msg 8
+        diagReq.BYTE(0) = MSG_8_BYTE_0;
+        output(diagReq);
+        //Msg 9
+        diagReq.BYTE(0) = MSG_9_BYTE_0;
+        output(diagReq);
+        //Msg 10
+        diagReq.BYTE(0) = MSG_10_BYTE_0;
+        output(diagReq);
+        //Msg 11
+        diagReq.BYTE(0) = MSG_11_BYTE_0;
+        output(diagReq);
+        //Msg 12
+        diagReq.BYTE(0) = MSG_12_BYTE_0;
+        output(diagReq);
+        //Msg 13
+        diagReq.BYTE(0) = MSG_13_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 14:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        //Msg 8
+        diagReq.BYTE(0) = MSG_8_BYTE_0;
+        output(diagReq);
+        //Msg 9
+        diagReq.BYTE(0) = MSG_9_BYTE_0;
+        output(diagReq);
+        //Msg 10
+        diagReq.BYTE(0) = MSG_10_BYTE_0;
+        output(diagReq);
+        //Msg 11
+        diagReq.BYTE(0) = MSG_11_BYTE_0;
+        output(diagReq);
+        //Msg 12
+        diagReq.BYTE(0) = MSG_12_BYTE_0;
+        output(diagReq);
+        //Msg 13
+        diagReq.BYTE(0) = MSG_13_BYTE_0;
+        output(diagReq);
+        //Msg 14
+        diagReq.BYTE(0) = MSG_14_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+        
+      case 15:
+        diagReq.DLC = 8;
+        diagReq.CAN = 1;
+        diagReq.BYTE(0) = Input00;
+        diagReq.BYTE(1) = Input01;
+        diagReq.BYTE(2) = Input02;
+        diagReq.BYTE(3) = Input03;
+        diagReq.BYTE(4) = Input04;
+        diagReq.BYTE(5) = Input05;
+        diagReq.BYTE(6) = Input06;
+        diagReq.BYTE(7) = Input07;
+        output(diagReq);
+        //Msg 2
+        diagReq.BYTE(0) = MSG_2_BYTE_0;
+        diagReq.BYTE(1) = BYTE_ALL_ZERO;
+        diagReq.BYTE(2) = BYTE_ALL_ZERO;
+        diagReq.BYTE(3) = BYTE_ALL_ZERO;
+        diagReq.BYTE(4) = BYTE_ALL_ZERO;
+        diagReq.BYTE(5) = BYTE_ALL_ZERO;
+        diagReq.BYTE(6) = BYTE_ALL_ZERO;
+        diagReq.BYTE(7) = BYTE_ALL_ZERO;
+        output(diagReq);
+        //Msg 3  
+        diagReq.BYTE(0) = MSG_3_BYTE_0;
+        output(diagReq);
+        //Msg 4
+        diagReq.BYTE(0) = MSG_4_BYTE_0;
+        output(diagReq);
+        //Msg 5
+        diagReq.BYTE(0) = MSG_5_BYTE_0;
+        output(diagReq);
+        //Msg 6
+        diagReq.BYTE(0) = MSG_6_BYTE_0;
+        output(diagReq);
+        //Msg 7
+        diagReq.BYTE(0) = MSG_7_BYTE_0;
+        output(diagReq);
+        //Msg 8
+        diagReq.BYTE(0) = MSG_8_BYTE_0;
+        output(diagReq);
+        //Msg 9
+        diagReq.BYTE(0) = MSG_9_BYTE_0;
+        output(diagReq);
+        //Msg 10
+        diagReq.BYTE(0) = MSG_10_BYTE_0;
+        output(diagReq);
+        //Msg 11
+        diagReq.BYTE(0) = MSG_11_BYTE_0;
+        output(diagReq);
+        //Msg 12
+        diagReq.BYTE(0) = MSG_12_BYTE_0;
+        output(diagReq);
+        //Msg 13
+        diagReq.BYTE(0) = MSG_13_BYTE_0;
+        output(diagReq);
+        //Msg 14
+        diagReq.BYTE(0) = MSG_14_BYTE_0;
+        output(diagReq);
+        //Msg 15
+        diagReq.BYTE(0) = MSG_15_BYTE_0;
+        output(diagReq);
+        
+        //Set Flag
+        TestWaitforTimeout(5);
+        RxNRCFlag = 1;
+        
+        break;
+                
+      //Default
+      default:
+        //Do nothing
+        break;
+    }   //End Switch
+}
+
+testfunction CANTEsterPresentON_OFF(int gTesterPresentCAN)
+{
+	  gActivateTPCAN = gTesterPresentCAN;
+  
+	if (gActivateTPCAN == 1)
+  {
+   diagStartTesterPresent("DIRA_UDS");  
+    
+  }
+  if (gActivateTPCAN == 0)
+  { 
+    diagStopTesterPresent("DIRA_UDS");
+  }
+}
+
+testfunction WriteECUParam (char paramName[], int paramValue )
+{
+   
+     long returnValue;
+
+     returnValue = MCDSetECUParam(gMcdModule,paramName,paramValue);
+
+     TestWaitForTimeout(1000);
+
+     if(returnValue == 0)
+     {
+      testStepPass("Data written successfully");
+     }
+     else
+     {
+      testStepFail("Write to data not successful");
+     } 
+}
+
+testfunction ReadECUParam(char param[],sysVarFloat * sysVarName)
+{
+
+   long returnVal;
+
+   MCDStopDataAcq();
+  
+   TestWaitForTimeout(1000);
+
+  
+   MCDStartDataAcq(gMcdModule, gTaskID, gPollRate, param);
+
+  
+   MCDMapECUParamToSysVariableRead(gMcdModule, param, sysVarName);
+  
+
+   TestWaitForTimeout(1000);
+    
+   
+
+}
+
+testfunction CANSetChannel_OFF()
+{
+  long channel = 1;
+  long silent  = 0;
+  
+	canSetChannelOutput(channel,silent);
+  write("Silent set to %d",silent);
+}
+
+testfunction EcuOnOff (long ecuState)
+{
+
+long returnVal;
+returnVal =    MCDEcuOnOffline(gMcdModule, ecuState);
+
+}
+
+testfunction DisableMsg (char MsgName[])
+{
+
+  if(strncmp(MsgName,"BCM_COMMAND_0FA",50) == 0)
+   {
+     TestDisableMsg(BCM_COMMAND_0FA);
+   }
+   else if(strncmp(MsgName,"BSM1_0F2",50) == 0)
+   {
+     TestDisableMsg(BSM1_0F2);
+   }
+   else if(strncmp(MsgName,"MOT1_0E6",50) == 0)
+   {
+     TestDisableMsg(MOT1_0E6);
+   }
+   else if(strncmp(MsgName,"STATUS_C_BCM2_4B4",50) == 0)
+   {
+     TestDisableMsg(STATUS_C_BCM2_4B4);
+  }
+   else if(strncmp(MsgName,"Status_C_IPC_419",50) == 0)
+   {
+     TestDisableMsg(Status_C_IPC_419);  
+  }
+   
+
+//testfunction CANSetChannel_ON()
+//{
+//  long channel = 1;
+//  long normal  = 1;
+//  
+//	canSetChannelOutput(channel,normal);
+//  write("Silent set to %d",normal);
+//}
+//
+//testfunction IS_XCP_Connected(char ECUName[])
+//{
+//	xcpIsConnected(ECUName);
+//  
+//  if(strncmp(ECUName,"Serial_Comm",50) == 0)
+//  {
+//    testStepPass("1.0", "ECU %s is Connected",ECUName);
+//  }
+//  else
+//  {
+//    testStepFail("1.0", "ECU %s is Connected",ECUName);
+//  }
+//}
+
+//testfunction IsMsgTx_495 (float TimeToWaitMs, int ExpectMsg)
+//{   
+//    long    TestResult;
+//
+//    TestCaseDescription("Testing of Normal Communication");
+//
+//    TestResult = testWaitForMessage(IS_DAT_DIRA_495, TimeToWaitMs);
+//
+//
+//    if(0 == TestResult)
+//    {
+//        /* Message not received in time */
+//        if(ExpectMsg == 1)
+//        {
+//            TestStepFail("Message Expected, but not received");
+//        }
+//        else
+//        {
+//            TestStepPass("Message Not Received as Expected");
+//        }
+//
+//    }
+//    else
+//    {
+//        /* Message received */
+//        if(ExpectMsg == 1)
+//        {
+//            TestStepPass("Message Received as Expected");
+//        }
+//        else
+//        {
+//            TestStepFail("Message Received, but not Expected");
+//            
+//        }
+//
+//    }
+//
+//}
+//
+//Testfunction SendSuppressCommand_CommCtrl_EnableRxAndTx()
+//{
+//     diagrequest EnableRxAndTx_Control req;
+//  
+//     diagSetTarget("DIRA_UDS");
+//     diagSetSuppressResp(req,1);
+//     diagSendRequest(req);
+//     TestWaitForDiagResponse(req,250);
+}
+
+testfunction IsMsgTx_795 (float TimeToWaitMs, int ExpectMsg)
+{   
+    long    TestResult;
+
+    TestCaseDescription("Testing of Normal Communication");
+
+    TestResult = testWaitForMessage(IS_SUPV_DIRA_795, TimeToWaitMs);
+
+
+    if(0 == TestResult)
+    {
+        /* Message not received in time */
+        if(ExpectMsg == 1)
+        {
+            TestStepFail("Message Expected, but not received");
+        }
+        else
+        {
+            TestStepPass("Message Not Received as Expected");
+        }
+
+    }
+    else
+    {
+        /* Message received */
+        if(ExpectMsg == 1)
+        {
+            TestStepPass("Message Received as Expected");
+        }
+        else
+        {
+            TestStepFail("Message Received, but not Expected");
+            
+        }
+
+    }
+
+}
+
+testfunction CommCtrl_Disable_SendSuppressCommand()
+{
+  diagrequest EnableRxAndDisableTx_Control req;
+ 
+  diagSetTarget("Nexteer_Common_Manufacturing_Services");
+  diagSetSuppressResp(req,1);
+  diagSendRequest(req);
+}
+testfunction CommCtrl_Enable_SendSuppressCommand()
+{
+  diagrequest EnableRxAndEnableTx_Control req;
+ 
+  diagSetTarget("Nexteer_Common_Manufacturing_Services");
+  diagSetSuppressResp(req,1);
+  diagSendRequest(req);
+}
+
+testfunction EnableMsg (char MsgName[])
+{
+  if(strncmp(MsgName,"BCM_COMMAND_0FA",50) == 0)
+   {
+     TestEnableMsg(BCM_COMMAND_0FA);
+   }
+   else if(strncmp(MsgName,"BSM1_0F2",50) == 0)
+   {
+     TestEnableMsg(BSM1_0F2);
+   }
+   else if(strncmp(MsgName,"MOT1_0E6",50) == 0)
+   {
+     TestEnableMsg(MOT1_0E6);
+   }
+   else if(strncmp(MsgName,"STATUS_C_BCM2_4B4",50) == 0)
+   {
+     TestEnableMsg(STATUS_C_BCM2_4B4);
+   }
+    else if(strncmp(MsgName,"Status_C_IPC_419",50) == 0)
+   {
+     TestEnableMsg(Status_C_IPC_419);
+  }
+}
+
+testfunction GetDLCOfMessage(char MessageID[], int ExpectedDLC)
+{
+  long MessageID_MonitorDLC = 0;
+  //Initialize message receive count
+  DLCCount = 0;
+  DLCCountError = 0;
+  
+  //Determine which message to monitor
+  MessageID_MonitorDLC = atol(MessageID);
+  
+  switch (MessageID_MonitorDLC)
+  {
+    case(0x0FA) :
+      gFlag0FADLC = 1;
+    case(0x0F2) :
+      gFlag0F2DLC = 1;
+    case(0x0E6) :
+      gFlag0E6DLC = 1;
+    case(0x4B4) :
+      gFlag04B4DLC = 1;
+    case(0x419) :
+      gFlag419DLC = 1;
+    case(0x0DE) :
+      gFlag0DEDLC = 1;
+    case(0x1E114002) :
+      gFlag1E114002DLC = 1; 
+    case(0x1E340002) :
+      gFlag1E340002DLC = 1; 
+    
+    default :
+      DLCCountError = 1;
+      write("Incorrect message ID for Fiasa Program");
+      break;
+  }
+  while((DLCCount < 10) && (DLCCountError == 0))
+  {
+    if(gFlag7FFDLC == 1)
+    {
+  //    Build functional diagnostic message and send it for On Message to capture it
+	diagReqFunctional.DLC = 8;
+  diagReqFunctional.CAN = 1;
+  diagReqFunctional.BYTE(0) = 0x02;
+  diagReqFunctional.BYTE(1) = 0x10;
+  diagReqFunctional.BYTE(2) = 0x01;
+  diagReqFunctional.BYTE(3) = 0x00;
+  diagReqFunctional.BYTE(4) = 0x00;
+  diagReqFunctional.BYTE(5) = 0x00;
+  diagReqFunctional.BYTE(6) = 0x00;
+  diagReqFunctional.BYTE(7) = 0x00;
+  output(diagReqFunctional);
+    }
+    
+    TestWaitForTimeout(500);
+  }
+  //Turn off flags
+  gFlag115DLC = 0;
+  gFlag2F5DLC = 0;
+  gFlag495DLC = 0;
+  gFlag695DLC = 0;
+  gFlag795DLC = 0;
+  gFlag7FFDLC = 0;
+  gFlag7B0DLC = 0;
+  
+  //calculate expected DLC Length
+  DLCLENGTH = ExpectedDLC;
+  write ("%d",DLCLENGTH);
+  
+  //Test pass/fail criteria
+  if((DLCCount < 10) && (DLCCountError != 0))
+  {
+    testStepPass("1.0", "DLC of message %x is %d, verified for 10 receptions", MessageID_MonitorDLC, DLCLENGTH);
+  }
+  else
+  {
+    testStepFail("1.0", "DLC of message %x is not %d, verified for 10 receptions", MessageID_MonitorDLC, DLCLENGTH);
+    write("%d",DLCCount);
+  }
+  
+  
+}
+
+testfunction BCM_Node(int Enable)
+{
+	if (Enable == 1)
+  {
+    TestEnableMsgAllTx("BCM");
+  }
+  else
+  {
+    TestDisableMsgAllTx("BCM");
+  }
+}
+
+testfunction ECM_Node(int Enable)
+{
+	if (Enable == 1)
+  {
+    TestEnableMsgAllTx("ECM");
+  }
+  else
+  {
+    TestDisableMsgAllTx("ECM");
+  }
+}
+
+testfunction IPC_Node(int Enable)
+{
+	if (Enable == 1)
+  {
+    TestEnableMsgAllTx("IPC");
+  }
+  else
+  {
+    TestDisableMsgAllTx("IPC");
+  }
+}
+
+
+
+testfunction CalculateMessageRates (int CANID, long NumSamples, int TimeOut_ms)
+{
+    //Reset All Variables
+    ResetRateVars();
+
+    //initialize variables
+    getCANID = CANID;
+    TotalCnt = NumSamples;
+    TimeOut = TimeOut_ms;
+
+    //test sample counter
+    while (SampleCounter <= TotalCnt)
+    {
+        //find message
+        GotMessage = TestWaitForMessage(getCANID, TimeOut);
+
+        //get message time in milliseconds
+        Message_Time = TimeNowNS()/1E6;
+
+        switch (GotMessage)
+            {
+
+                //Resume due to constraint violation
+                Case -2:
+                    writeToLog("ERROR - Could not get message 0x%x due to constraint violation", getCANID);
+                    write("ERROR - Could not get message 0x%x due to constraint violation", getCANID);
+                    SampleCounter = TotalCnt;
+                    break;
+
+                //General error, for example, functionality is not available
+                Case -1:
+                    writeToLog("ERROR - Could not get message 0x%x due to General error", getCANID);
+                    write("ERROR - Could not get message 0x%x due to General error", getCANID);
+                    SampleCounter = TotalCnt;
+                    break;
+
+                //Resume due to timeout
+                Case 0:
+                    writeToLog("ERROR - Could not get message 0x%x due to timeout", getCANID);
+                    writeToLog("Message Rate Exceeds Timout Value %d ms", TimeOut);
+                    write("ERROR - Could not get message 0x%x due to timeout", getCANID);
+                    write("Message Rate Exceeds Timout Value %d ms", TimeOut);
+                    SampleCounter = TotalCnt;
+                    break;
+        
+                //Resume due to event occurred (got message)
+                Case 1:
+
+                    if (SampleCounter == 0)
+                    {
+                        Previous_Message_Time = Message_Time;
+
+                    }
+                    else
+                    {
+                        Avg_Max_Min();
+                    }
+
+                    //SampleCounter++;
+                    break;
+
+                //Default
+                Default:
+                    writeToLog("ERROR - Could not get message 0x%x due to UnKnown error", getCANID);
+                    write("ERROR - Could not get message 0x%x due to UnKnown error", getCANID);
+                    SampleCounter = TotalCnt;
+                    break;
+             }
+             
+             //increment sample counter
+             SampleCounter++;
+    }
+
+    //write system variable(s)
+    @sysvar::MESSAGES::SysVarAvgTxRate = Running_Average_Message_Rate;
+    @sysvar::MESSAGES::SysVarMaxTxRate = Maximum_Message_Rate;
+    @sysvar::MESSAGES::SysVarMinTxRate = Minimum_Message_Rate;
+
+    //write ouput data
+    writetolog("Message ID = 0x%x", getCANID);
+    write("Message ID = 0x%x", getCANID);
+    writetolog("Sample Size = %d", TotalCnt);
+    write("Sample Size = %d", TotalCnt);
+
+    if (Running_Average_Message_Rate != 0)
+    {
+        writetolog("Running Average Rate (ms) = %f", Running_Average_Message_Rate);
+        write("Running Average Rate (ms) = %f", Running_Average_Message_Rate);
+        writetolog("Maximum Message Rate (ms) = %f", Maximum_Message_Rate);
+        write("Maximum Message Rate (ms) = %f", Maximum_Message_Rate);
+        writetolog("Minimum Message Rate (ms) = %f", Minimum_Message_Rate);
+        write("Minimum Message Rate (ms) = %f", Minimum_Message_Rate);
+    }
+    else
+    {
+        writetolog("Running Average Rate (ms) = NOT AVAILABLE");
+        write("Running Average Rate (ms) = NOT AVAILABLE");
+        writetolog("Maximum Message Rate (ms) = NOT AVAILABLE");
+        write("Maximum Message Rate (ms) = NOT AVAILABLE");
+        writetolog("Minimum Message Rate (ms) = NOT AVAILABLE");
+        write("Minimum Message Rate (ms) = NOT AVAILABLE");
+    }
+
+    Write("");
+
+}
+
+
+
+testfunction Change_DLC(char MessageID[], int DLCLENGTH)
+{
+  long MessageID_MonitorDLC = 0;
+  
+  //Determine which messages to change the DLC
+  MessageID_MonitorDLC = atol(MessageID);
+  
+  If(MessageID_MonitorDLC == 0x0FA)
+  {
+    testSetMsgDlc(BCM_COMMAND_0FA,DLCLENGTH);
+  }
+  else if(MessageID_MonitorDLC == 0x0F2)
+  {
+    testSetMsgDlc(BSM1_0F2,DLCLENGTH);
+  }
+  else if(MessageID_MonitorDLC == 0x0E6)
+  {
+    testSetMsgDlc(MOT1_0E6,DLCLENGTH);
+  }
+  else if(MessageID_MonitorDLC == 0x4B4)
+  {
+    testSetMsgDlc(STATUS_C_BCM2_4B4,DLCLENGTH);
+ 
+  }
+}
+
+testfunction Reset_DLC(char MessageID[])
+{
+	 long MessageID_MonitorDLC = 0;
+  
+  //Determine which messages to change the DLC
+  MessageID_MonitorDLC = atol(MessageID);
+  If(MessageID_MonitorDLC == 0x0FA)
+  {
+    testResetMsgDlc(BCM_COMMAND_0FA);
+  }
+  else if(MessageID_MonitorDLC == 0x0F2)
+  {
+    testResetMsgDlc(BSM1_0F2);
+  }
+  else if(MessageID_MonitorDLC == 0x0E6)
+  {
+    testResetMsgDlc(MOT1_0E6);
+  }
+  else if(MessageID_MonitorDLC == 0x4B4)
+  {
+    testResetMsgDlc(STATUS_C_BCM2_4B4);
+  }
+   
+}
+
+ResetRateVars ()
+{
+//This function used in conjuction with CalculateMessageRates()
+//ID of message to test
+int getCANID = 0;
+
+//The number of message smaples to test over
+long TotalCnt = 0;
+
+//max time to mwait for message (timeout) in milliseconds
+int TimeOut = 0;
+
+//This value is set when message is recieved
+GotMessage = 0;
+
+//time of message
+Previous_Message_Time = 0;
+Message_Time = 0;
+Current_Message_Rate = 0;
+Sum_Message_Rate = 0;
+Running_Average_Message_Rate = 0;
+Maximum_Message_Rate = 0;
+Minimum_Message_Rate = 0;
+
+//counts the message samples
+SampleCounter = 0;
+
+//System Variables
+@sysvar::MESSAGES::SysVarAvgTxRate = 0;
+@sysvar::MESSAGES::SysVarMinTxRate = 0;
+@sysvar::MESSAGES::SysVarMaxTxRate = 0;
+
+}
+
+
+
+
+
+Testfunction SendSuppressCommand_CommCtrl_EnableRxAndDisableTx()
+{
+     diagrequest EnableRxAndDisableTx_Control req;
+  
+     diagSetTarget("PSCM");
+     diagSetSuppressResp(req,1);
+     diagSendRequest(req);
+     TestWaitForDiagResponse(req,250);
+}
+
+Avg_Max_Min()
+{
+//This function used in conjuction with CalculateMessageRates()
+// Begin Debug
+
+//    writetolog("GotMessage = %d", GotMessage);
+//    writetolog("SampleCounter = %d", SampleCounter);
+//    writetolog("TotalCnt = %d", TotalCnt);
+//    writetolog("getCANID = %d", getCANID);
+//    writetolog("sample captures @ %f", Message_Time);
+//    writetolog("Current_Message_Rate %f", Current_Message_Rate);
+//    writetolog("Previous_Message_Time %f", Previous_Message_Time);
+//    writetolog("Sum_Message_Rate %f", Sum_Message_Rate);
+//    writetolog("");
+
+// End Debug
+//
+//    //calculate current message rate
+//    Current_Message_Rate = Message_Time - Previous_Message_Time;
+//
+//    //Calculate Maximum Message Rate
+//    Max();
+//
+//    //Calculate Minimum Message Rate
+//    Min();
+//    
+//    //Set Previous message time
+//    Previous_Message_Time = Message_Time;
+//    
+//    //calcualte running average
+//    Sum_Message_Rate = Sum_Message_Rate + Current_Message_Rate;
+//    Running_Average_Message_Rate = Sum_Message_Rate / SampleCounter;
+
+}
+
+//testfunction IsApplicationMsgTx (float TimeToWaitMs, int ExpectMsg)
+//{   
+//    long    TestResult;
+//
+//    TestCaseDescription("Testing of Normal Communication");
+//
+//    TestResult = testWaitForMessage(NM_EPS, TimeToWaitMs);
+//
+//
+//    if(0 == TestResult)
+//    {
+//        /* Message not received in time */
+//        if(ExpectMsg == 1)
+//        {
+//            TestStepFail("Message Expected, but not received");
+//        }
+//        else
+//        {
+//            TestStepPass("Message Not Received as Expected");
+//        }
+//
+//    }
+//    else
+//    {
+//        /* Message received */
+//        if(ExpectMsg == 1)
+//        {
+//            TestStepPass("Message Received as Expected");
+//        }
+//        else
+//        {
+//            TestStepFail("Message Received, but not Expected");
+//            
+//        }
+//
+//    }
+//
+//}
+
+testfunction ResetCANChannel()
+{
+	resetCanEx(1);
+}
+
+testfunction Reset_All_FaultInjections()
+{
+	testResetAllFaultInjections(BCM);
+  testResetAllFaultInjections(ECM);
+  testResetAllFaultInjections(IPC);
+
+}
+
+testfunction CANBusload()
+{
+  write ("CAN1 busload = %d", CAN1.BusLoad);
+}
+
+Testfunction SendSuppressCommand_TesterPresent()
+{
+     diagrequest TesterPresent_Send req;
+  
+     diagSetTarget("PSCM");
+     diagSetSuppressResp(req,1);
+     diagSendRequest(req);
+     TestWaitForDiagResponse(req,250);
+}
+
+
+
+

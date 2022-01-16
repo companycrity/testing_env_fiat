@@ -1,0 +1,1235 @@
+/*@!Encoding:1252*/
+variables
+{
+
+    /* Handwheel Torque Simulation Information */
+    msTimer     TrqLoop_tmr;
+    int         cLoopRate = 1;       /* ms per torque loop */
+    float       gTbar_NmpDeg ;          //User Input, Nm Per Degree
+    float       gTrqSensor_VpDeg ;      //User Input, Voltage per Degree
+
+    int         gTrqRampActive = 0;
+    float       gCurrentTrq_Nm = 0.0;
+    float       gT1_V;
+    float       gT2_V;
+
+    float       gTrqStepSize;
+    float       gTrqNumLoops;
+    float       gDeltaMagTrq;
+    float       gFinalTorque_Nm = 0; 
+
+    float       gDigTrq1_PWMOutputDC;
+    float       gDigTrq2_PWMOutputDC;
+
+
+   /* Handwheel Position Simulation Information */
+    msTimer     PosLoop_tmr;
+    int         cPosLoopRate = 1;       /* ms per torque loop */
+
+    int         gPosRampActive = 0;
+    float       gCurrentPos_Deg = 0.0;
+    float       gP1_V;
+    float       gP2_V;
+    float       gP3_V;
+    float       gP4_V;
+
+    float       gPosStepSize;
+    float       gPosNumLoops;
+    float       gDeltaMagPos;
+
+    /* NCS Nominal offset and amplitude constants */
+    float       cP12Amp_V = 1.5;
+    float       cP12Offset_V = 2.5;
+    float       cP34Amp_V = 1.5;
+    float       cP34Offset_V = 2.5;
+  
+
+   /* Motor Position Simulation Information - Digital */    
+    float       gMtr1_V;
+    float       gMtr2_V;
+    float       gMtr3_V;
+    float       gMtr4_V;
+    float       gMtr5_V;
+    float       gMtr6_V;  // Used for both Tach (when Dig MSB) and Turns Counter (when Analog MSB) 
+    float       gMtr7_V;  // Used for both Tach (when Dig MSB) and Turns Counter (when Analog MSB) 
+    float       cDigMsbHigh_V = 3.3;
+    float       cDigMsbLow_V = 0.0;
+    float       gFinalPosition_Deg = 0;   
+    
+    float       gMtrVel_DegpSec;  //Motor Velocity in Degrees Per Second (angular velocity)
+    float       cTachAmpMult_VpDegpSec = 0.0003;
+    float       cTachOffset_V = 2.5;
+
+    
+   /* Motor Position Simulation Information - Analog */    
+    float       gSina_V;
+    float       gCosa_V;
+    float       gSinb_V;
+    float       gCosb_V;
+
+    /*Turns Counter Simulation Information - Analog*/
+    float      gTC1_V;  
+    float      gTC2_V;  
+    float      cAnalogTcAmp_V = 0.5;
+    float      cAnalogTcOffset_V =  1.65;
+
+    /* Sensor Type Information */
+    int         gColPosSensorType ;  //User Input
+    int         cDTWRel = 0;
+    int         cDTWAbs = 1;
+    int         cNCSRel = 2;
+    int         cNCSAbs = 3;
+    int         cSensorLess = 4;
+
+    int         gMsbSensorType ;     //User Input
+    int         cDigitalMsb = 0;
+    int         cAnalogMsb = 1;
+
+    float       cAnalogMsbAmp_V = 1.0;
+    float       cAnalogMsbOffset_V = 2.5;
+
+    float       gGearRatio ;         //User Input
+    int         gTurnsCntrEnable;    //User Input
+
+	/* SensorFail used for detection of all Failures */
+	  int         gSensorFail;
+
+    /* Constant Masks for Induced Failures for torque sensor */
+    int         gTrqFail;
+    int         cT1_Fail = 0x0001;
+    int         cT2_Fail = 0x0002;
+
+    /* Constant Masks for Induced Failures for torque sensor */
+    int         cDigTrq1_Fail = 0x2000;
+    int         cDigTrq2_Fail = 0x4000;
+
+    /* Constant Masks for Induced Failures for column sensor */
+    int         gPosFail;
+    int         cP1_Fail = 0x0004;
+    int         cP2_Fail = 0x0008;
+    int         cP3_Fail = 0x0010;
+    int         cP4_Fail = 0x0020;
+
+    /* Constant Masks for Induced Failures for MSB */
+    int         gMsbFail;
+    int         cM1_Fail = 0x0040;
+    int         cM2_Fail = 0x0080;
+    int         cM3_Fail = 0x0100;
+    int         cM4_Fail = 0x0200;
+    int         cM5_Fail = 0x0400;
+    int         cM6_Fail = 0x0800;
+    int         cM7_Fail = 0x1000;
+   
+
+    /* Battery Voltage Information */
+    msTimer     VoltageLoop_tmr;
+    int         cVoltLoopRate = 10;       /* ms per torque loop */
+    float       gVoltRate_VpSec;
+    
+    int         gVoltRampActive = 0;
+    float       gCurrentVolt_V = 12.0;
+    float       gVoltStepSize;
+    float       gVoltNumLoops;
+    float       gDeltaMagVolt;
+    float       gSlotID = 0;
+    float       CurrTime;
+    float       gFinalBattery_V = 0; 
+
+    /* Torque Sweep Information*/
+        /* Command Data */
+        float gAmpl_Trq = 0;
+        float gOffset_Trq = 0;
+        float gStart_Frq_Trq = 0;
+        float gEnd_Frq_Trq = 0;
+        float gDuration_Trq_Sec = 0;
+    
+        /* Computed Data */
+        float gStepsize_HzpMS_Trq = 0;
+        float gTrqFreq_Hz = 0;
+        float gStartingSineTorque_Nm = 0;
+        int   gWaveFormType_Trq = 0;
+        double LoopCntr_Trq = 0;
+
+    /* Battery Sweep Information*/
+        /* Command Data */
+        float gAmpl_Batt = 0;
+        float gOffset_Batt = 0;
+        float gStart_Frq_Batt = 0;
+        float gEnd_Frq_Batt = 0;
+        float gDuration_Batt_Sec = 0;
+    
+        /* Computed Data */
+        float gStepsize_HzpMS_Batt = 0;
+        float gBattFreq_Hz = 0;
+        float gStartingSineBatt_V = 0;
+        int   gWaveFormType_Batt = 0;
+        double LoopCntr_Batt = 0;
+
+   /* Position Sweep Information*/
+        /* Command Data */
+        float gAmpl_Pos = 0;
+        float gOffset_Pos = 0;
+        float gStart_Frq_Pos = 0;
+        float gEnd_Frq_Pos = 0;
+        float gDuration_Pos_Sec = 0;
+    
+        /* Computed Data */
+        float gStepsize_HzpMS_Pos = 0;
+        float gPosFreq_Hz = 0;
+        float gStartingSinePos_Deg = 0;
+        int   gWaveFormType_Pos = 0;
+        double LoopCntr_Pos = 0;
+      
+       /* JUNK HERE - REMOVE */
+        float TempVSpd = 24.0;
+
+        /*IgnitionCycleTest variables*/
+        int LoopCycle;
+        
+        /* Special Testing - Ignition Cycle Variable Time BMW */
+        msTimer     Countdown_tmr;
+        int         ActualOffTime = 0;
+        int         VariableTime = 10;
+        int         IgnOff = 0;
+}
+
+CalcAnalogMSB ()
+{
+    float MtrDegMech;
+    MtrDegMech = Mod(gCurrentPos_Deg * gGearRatio, 360);
+    
+    gMtr1_V = cAnalogMsbAmp_V * sin(MtrDegMech * 2 * PI / 360) + cAnalogMsbOffset_V;
+    gMtr2_V = cAnalogMsbAmp_V * cos(MtrDegMech * 2 * PI / 360) + cAnalogMsbOffset_V;
+
+    gMtr3_V = cAnalogMsbAmp_V * SIN((MtrDegMech+180) * 2 * PI / 360) + cAnalogMsbOffset_V;
+    gMtr4_V = cAnalogMsbAmp_V * COS((MtrDegMech+180) * 2 * PI / 360) + cAnalogMsbOffset_V;
+
+}
+
+on timer PosLoop_tmr
+{
+    /* Set Timer to run loop continuously */
+    SetTimer(PosLoop_tmr, cPosLoopRate);
+
+
+    if(gPosRampActive == 1)
+    {
+    
+        /* Only execute computations while ramping to new torque level */
+        if(gPosRampActive == 1)
+        {
+            // Ramp Active = 1 means perform linear ramp
+            // Routine below computes T1 and T2 voltages
+            PositionLinearRamp();
+
+            /* Check for completion of ramp to final destination */
+            gDeltaMagTrq = gDeltaMagTrq - abs(gTrqStepSize);
+
+            if(gDeltaMagPos <= abs(gPosStepSize))
+            {
+                
+                gCurrentPos_Deg = gFinalPosition_Deg;
+                gPosRampActive = 0;
+                CancelTimer(PosLoop_tmr);
+            
+                /* Since position is reached, zero velocity for tach purposes */
+                gMtrVel_DegpSec = 0.0;
+            }
+        }
+     }   
+     else if (gPosRampActive == 2)
+     {
+         /* Count number of loops for duration checks */
+         LoopCntr_Pos = LoopCntr_Pos + 1;
+    
+         // Ramp Active = 2 means perform sine sweep
+         // Routine below computes position data
+         PositionSineSweep();
+
+         /* Check for completion of sine duration */
+         if((LoopCntr_Pos / 1000) >= gDuration_Pos_Sec)
+         {
+             gPosRampActive = 0;
+             CancelTimer(PosLoop_tmr);
+                
+             /* Since position is reached, zero velocity for tach purposes */
+             gMtrVel_DegpSec = 0.0;
+         }
+
+     }
+     else
+     {
+         // No action being taken, linear or sine
+     }
+ 
+
+    /* Identify which style column position to use - this is established by the InitializeSystemParms function*/
+    switch (gColPosSensorType)
+    {
+        Case 0:
+            CalcDTWSignals();
+            break;
+    
+        Case 1:
+            CalcDTWSignals();
+            break;
+    
+        Case 2: 
+            CalcNCSSignals();
+            break;
+          
+        Case 3:
+            CalcNCSSignals();
+            break;
+    
+        Default: break;
+    }
+
+    /* Note - Motor position and Turns Counter data must follow column position data */
+    if(gMsbSensorType == cDigitalMsb)
+    {
+
+    
+        /* Digital MSB data updates, including tach */
+        CalcDigitalMSB();
+    }
+    else
+    {
+    
+      
+        /* Analog MSB data updates */
+        CalcAnalogMSB ();
+
+        if(gTurnsCntrEnable == 1)
+        {
+
+      
+            /*Analog Turns Counter data updates */
+            CalcTurnsCounter();
+        }
+       
+    }
+
+    /* Check for completion of ramp to final destination */
+    gDeltaMagPos = gDeltaMagPos - abs(gPosStepSize);
+
+
+    /* Write voltages for column position to hardware VT system generically */
+    @sysvar::VTS::Position1::Voltage = gP1_V;
+    @sysvar::VTS::Position2::Voltage = gP2_V;
+    @sysvar::VTS::Position3::Voltage = gP3_V;
+    @sysvar::VTS::Position4::Voltage = gP4_V;
+
+    /* Write voltages for motor position to hardware VT system generically */
+    @sysvar::VTS::Motor1::Voltage = gMtr1_V;
+    @sysvar::VTS::Motor2::Voltage = gMtr2_V;
+    @sysvar::VTS::Motor3::Voltage = gMtr3_V;
+    @sysvar::VTS::Motor4::Voltage = gMtr4_V;
+    @sysvar::VTS::Motor5::Voltage = gMtr5_V;
+
+    /*Write voltage for Tach or Turns Counter to the hardware VT system */
+    @sysvar::VTS::Motor6::Voltage = gMtr6_V;
+    @sysvar::VTS::Motor7::Voltage = gMtr7_V;
+
+    /* Check for failure overrides */
+    if((gSensorFail & cP1_Fail) == cP1_Fail)
+    {
+       
+        @sysvar::VTS::Position1::Voltage = 0.0;
+    }
+    if((gSensorFail & cP2_Fail) == cP2_Fail)
+    {
+       
+        @sysvar::VTS::Position2::Voltage = 0.0;
+    }
+    if((gSensorFail & cP3_Fail) == cP3_Fail)
+    {
+        
+        @sysvar::VTS::Position3::Voltage = 0.0;
+    }
+    if((gSensorFail & cP4_Fail) == cP4_Fail)
+    {
+     
+        @sysvar::VTS::Position4::Voltage = 0.0;
+    }
+    if((gSensorFail & cM1_Fail) == cM1_Fail)
+    {
+       
+        @sysvar::VTS::Motor1::Voltage = 0.0;
+    }
+    if((gSensorFail & cM2_Fail) == cM2_Fail)
+    {
+     
+        @sysvar::VTS::Motor2::Voltage = 0.0;
+    }
+    if((gSensorFail & cM3_Fail) == cM3_Fail)
+    {
+       
+        @sysvar::VTS::Motor3::Voltage = 0.0;
+    }
+    if((gSensorFail & cM4_Fail) == cM4_Fail)
+    {
+       
+        @sysvar::VTS::Motor4::Voltage = 0.0;
+    }
+    if((gSensorFail & cM5_Fail) == cM5_Fail)
+    {
+       
+        @sysvar::VTS::Motor5::Voltage = 0.0;
+    }
+    if((gSensorFail & cM6_Fail) == cM6_Fail)
+    {
+        
+        @sysvar::VTS::Motor6::Voltage = 0.0;
+    }
+    if((gSensorFail & cM7_Fail) == cM7_Fail)
+    {
+      
+        @sysvar::VTS::Motor7::Voltage = 0.0;
+    }
+          
+
+}
+
+on timer TrqLoop_tmr
+{
+    
+
+
+
+    /* Set Timer to run loop continuously */
+    SetTimer(TrqLoop_tmr, cLoopRate);
+
+    /* Count number of loops for duration checks */
+    LoopCntr_Trq = LoopCntr_Trq + 1;
+
+    /* Only execute computations while ramping to new torque level */
+    if(gTrqRampActive == 1)
+    {
+        // Ramp Active = 1 means perform linear ramp
+        // Routine below computes T1 and T2 voltages
+        TorqueLinearRamp();
+
+        /* Check for completion of ramp to final destination */
+        gDeltaMagTrq = gDeltaMagTrq - abs(gTrqStepSize);
+
+        if(gDeltaMagTrq <= abs(gTrqStepSize))
+        {
+            gCurrentTrq_Nm = gFinalTorque_Nm;
+            gTrqRampActive = 0;
+            CancelTimer(TrqLoop_tmr);
+        }
+
+    }
+    else if (gTrqRampActive == 2)
+    {
+    
+        // Ramp Active = 2 means perform sine sweep
+        // Routine below computes T1 and T2 voltages
+        TorqueSineSweep();
+
+        /* Check for completion of sine duration */
+        if((LoopCntr_Trq / 1000) >= gDuration_Trq_Sec)
+        {
+            gTrqRampActive = 0;
+            CancelTimer(TrqLoop_tmr);
+        }
+
+    }
+    else
+    {
+        // No action being taken, linear or sine
+    }
+        
+
+    /* Compute voltages for new Current Torque */
+    gT1_V = 2.5 + (gCurrentTrq_Nm / gTbar_NmpDeg * gTrqSensor_VpDeg)/2;
+    gT2_V = 2.5 - (gCurrentTrq_Nm / gTbar_NmpDeg * gTrqSensor_VpDeg)/2;
+
+
+    if (gTrqRampActive != 0)
+    {
+        /* limit to nominal max and min */
+        if(gT1_V > 4.5)
+        {
+            gT1_V = 4.5;
+        }
+
+        if(gT1_V < 0.5)
+        {
+            gT1_V = 0.5;
+        }
+        
+        if(gT2_V > 4.5)
+        {
+            gT2_V = 4.5;
+        }
+
+        if(gT2_V < 0.5)
+        {
+            gT2_V = 0.5;
+        }
+    
+        /* Write voltages to hardware VT system */
+        if((gSensorFail & cT1_Fail) == cT1_Fail)
+        {
+            @sysvar::VTS::Torque1::Voltage = 0.0;
+        }
+        else
+        {
+            @sysvar::VTS::Torque1::Voltage = gT1_V;
+        }
+
+        if((gSensorFail & cT2_Fail) == cT2_Fail)
+        {
+            @sysvar::VTS::Torque2::Voltage = 0.0;
+        }
+        else
+        {
+            @sysvar::VTS::Torque2::Voltage = gT2_V;
+        }
+
+        /* Compute Duty Cycle for new Current Torque */
+       gDigTrq1_PWMOutputDC = gT1_V * 100 / 5;
+       gDigTrq2_PWMOutputDC = gT2_V * 100 / 5;
+
+        /* Write voltages to hardware VT system */
+        if((gSensorFail & cDigTrq1_Fail) == cDigTrq1_Fail)
+        {
+            @sysvar::VTS::DigTrq1::PWMOutputDC = 0.0;
+        }
+        else
+        {
+            @sysvar::VTS::DigTrq1::PWMOutputDC = gDigTrq1_PWMOutputDC;
+        }
+
+        if((gSensorFail & cDigTrq2_Fail) == cDigTrq2_Fail)
+        {
+            @sysvar::VTS::DigTrq2::PWMOutputDC = 0.0;
+        }
+        else
+        {
+            @sysvar::VTS::DigTrq2::PWMOutputDC = gDigTrq2_PWMOutputDC;
+        }
+
+    }
+
+}
+
+CalcDTWSignals ()
+{
+    float Mod360ofCurrPos;
+    
+ 
+    Mod360ofCurrPos = Mod(gCurrentPos_Deg, 360);
+
+
+        /* Compute voltage for P1 signal based on current position */
+        if (Mod(Mod360ofCurrPos + 90.0, 360) <= 180.0)
+        {
+            gP1_V = (Mod(Mod360ofCurrPos + 90, 360) / 180) * 5;
+        }
+        else
+        {
+            gP1_V = (2-Mod(Mod360ofCurrPos + 90, 360) / 180) * 5;
+        }
+
+        /* Compute voltage for P2 signal based on current position */
+        if (Mod(Mod360ofCurrPos, 360) <= 180.0)
+        {
+            gP2_V = (Mod(Mod360ofCurrPos, 360) / 180) * 5;
+        }
+        else
+        {
+            gP2_V = (2 - Mod(Mod360ofCurrPos, 360) / 180) * 5;
+        }
+
+        /* Compute voltage for P3 signal based on current position - Absolute stairstep signal */
+        gP3_V = _floor((gCurrentPos_Deg + 900) / 180) * 0.5;
+
+        /* P4 not used for DTW sensor */
+        gP4_V = 0.0;
+
+}
+
+CalcDigitalMSB ()
+{
+    byte temp1;
+    byte temp2;
+
+    float MtrDegElec;
+    MtrDegElec = Mod(gCurrentPos_Deg * gGearRatio * 3, 360);
+
+    /* Low Resolution Digital Sensor State Determination */
+    if ( MtrDegElec < 180 )
+    { gMtr1_V = cDigMsbHigh_V; }
+    else
+    { gMtr1_V = cDigMsbLow_V; }
+
+    if ( MtrDegElec >= 120 && MtrDegElec < 300 )
+    { gMtr2_V = cDigMsbHigh_V; }
+    else
+    { gMtr2_V = cDigMsbLow_V; }
+
+    if ( MtrDegElec >= 60 && MtrDegElec < 240 )
+    { gMtr3_V = cDigMsbLow_V; }
+    else
+    { gMtr3_V = cDigMsbHigh_V; }
+
+    temp1 = ((gMtr1_V/3.3))*4+((gMtr2_V/3.3)*2)+(gMtr3_V/3.3);
+
+
+        
+    /* High Resolution Digital Sensor State Determination */
+    if ( Mod(MtrDegElec, 30) < 15 )
+    { gMtr4_V = cDigMsbLow_V; }
+    else
+    { gMtr4_V = cDigMsbHigh_V; }
+
+    if ((Mod(MtrDegElec, 30) >= 7.5) && (Mod(MtrDegElec, 30) < 22.5))
+    { gMtr5_V = cDigMsbLow_V; }
+    else
+    { gMtr5_V = cDigMsbHigh_V; }
+
+    temp1 = gMtr5_V;
+    if (temp1 != temp2)
+    {
+        write("Q2 = %x", temp1);
+        temp2 = temp1;
+    }
+
+    /* Tachometer Signals */
+    CalcTachSignals();
+
+}
+
+CalcNCSSignals ()
+{
+        gP1_V = cP12Amp_V * sin(Mod(gCurrentPos_Deg, 360) * 2 * PI / 360) + cP12Offset_V;
+        gP2_V = cP12Amp_V * cos(Mod(gCurrentPos_Deg, 360) * 2 * PI / 360) + cP12Offset_V;
+
+        gP3_V = cP34Amp_V * SIN(_floor((gCurrentPos_Deg+900) / 180) * 36 * 2 * PI / 360) + cP34Offset_V;
+        gP4_V = cP34Amp_V * COS(_floor((gCurrentPos_Deg+900) / 180) * 36 * 2 * PI / 360) + cP34Offset_V;
+}
+
+float Mod (float n, float deg)
+{   
+    float remainder;
+    remainder = n - (deg*_floor(n/deg));
+    return remainder;
+}
+
+CalcTachSignals ()
+{
+    float MtrDegMech;
+    MtrDegMech = Mod(gCurrentPos_Deg * gGearRatio, 360);
+    
+    gMtr6_V = cTachAmpMult_VpDegpSec * gMtrVel_DegpSec * sin(MtrDegMech * 2 * PI / 360) + cTachOffset_V;
+    gMtr7_V = cTachAmpMult_VpDegpSec * gMtrVel_DegpSec * cos(MtrDegMech * 2 * PI / 360) + cTachOffset_V;
+   
+
+}
+
+on timer VoltageLoop_tmr
+{
+    /* Set Timer to run loop continuously */
+    SetTimer(VoltageLoop_tmr, cVoltLoopRate);
+    
+    /* Count number of loops for duration checks */
+    LoopCntr_Batt = LoopCntr_Batt + 1;
+
+    /* Only execute computations while ramping to new torque level */
+    if(gVoltRampActive == 1)
+    {
+        // Ramp Active = 1 means perform linear ramp
+        // Routine below computes Battery Voltages
+        BatteryLinearRamp();
+
+         /* Check for end of ramp */
+        if(gDeltaMagVolt <= abs(gVoltStepSize))
+        {
+            gCurrentVolt_V = gFinalBattery_V;
+            gVoltRampActive = 0;
+            CancelTimer(VoltageLoop_tmr);
+        }
+
+    }
+    else if (gVoltRampActive == 2)
+    {
+    
+        // Ramp Active = 2 means perform sine sweep
+        // Routine below computes battery voltages
+        BatterySineSweep();
+
+        
+         /* Check for end of sweep duration */
+        if(LoopCntr_Batt / 100 >= gDuration_Batt_Sec)
+        {
+            gVoltRampActive = 0;
+            CancelTimer(VoltageLoop_tmr);
+        }
+
+    }
+    else
+    {
+        // No action being taken, linear or sine
+    }
+    
+    /* Output new battery voltage from any waveform used */
+
+    @sysvar::VTS::ExtSupp1::RefVoltage = gCurrentVolt_V;
+}
+
+testfunction FailSensor (int SensorFail)
+{
+
+    gSensorFail = SensorFail;
+   write("Sensor failed %d" ,gSensorFail);
+  
+}
+
+testfunction IgnitionOff ()
+{
+write("igntionOFF");
+     @sysvar::VTS::Ignition::Active = 0;
+    
+}
+
+testfunction IgnitionOn ()
+{
+write("igntionON");
+     @sysvar::VTS::Ignition::Active = 1;
+}
+
+testfunction BatteryOff ()
+{
+     @sysvar::VTS::Battery::Active = 0;
+     writeToLog("BATTERY OFF:");
+}
+testfunction BatteryOn ()
+{
+     @sysvar::VTS::Battery::Active = 1;
+     writeToLog("BATTERY ON:");
+}
+
+
+testfunction InitializeSystemParms (float Tbar_NmpDeg, float Sensor_VpDeg, int ColPosType, int MSBType, float GearRatio, int TurnsCntrEnable)
+{
+    gTbar_NmpDeg = Tbar_NmpDeg;
+    gTrqSensor_VpDeg = Sensor_VpDeg;
+    gColPosSensorType = ColPosType;
+    gMsbSensorType = MSBType;
+    gGearRatio = GearRatio;
+    gTurnsCntrEnable = TurnsCntrEnable;
+
+
+}
+
+testfunction ModifyBattVoltage (float DesiredVoltage, float VoltageRate)
+{
+    /* Compute data needed for step size ONCE per request.  If called while active, flag error */
+    if(gVoltRampActive == 0)
+    {
+        gFinalBattery_V = DesiredVoltage;
+        gVoltNumLoops = abs(((DesiredVoltage - gCurrentVolt_V) * 1000 / VoltageRate)/cVoltLoopRate);
+        gVoltStepSize = (DesiredVoltage - gCurrentVolt_V) / gVoltNumLoops;
+        gDeltaMagVolt = abs(DesiredVoltage - gCurrentVolt_V);
+        gVoltRampActive = 1;
+        SetTimer(VoltageLoop_tmr, cVoltLoopRate);
+
+    }
+    else
+    {
+        write("Warning - prior torque function did not complete before another was executed");
+    }
+}
+
+testfunction ModifyPos (float DesiredPos_Deg, float PosRate_DegpS)
+{
+    /* Compute data needed for step size ONCE per request.  If called while active, flag error */
+    if(gPosRampActive == 0)
+    {
+        gFinalPosition_Deg = DesiredPos_Deg;
+        gMtrVel_DegpSec = PosRate_DegpS * gGearRatio;
+        gPosNumLoops = abs(((DesiredPos_Deg - gCurrentPos_Deg) * 1000 / PosRate_DegpS) / cPosLoopRate);
+        gPosStepSize = (DesiredPos_Deg - gCurrentPos_Deg) / gPosNumLoops;
+        gDeltaMagPos = abs(DesiredPos_Deg - gCurrentPos_Deg);
+        gPosRampActive = 1;
+        SetTimer(PosLoop_tmr, cPosLoopRate);
+    }
+    else
+    {
+        TestStepFail("Tried to modify position before ramp was complete");
+    }
+
+}
+
+testfunction ModifyTrq (float DiffTrqReq_Nm, float DiffTrqRate_NmpS)
+{
+    
+    /* Compute data needed for step size ONCE per request.  If called while active, flag error */
+    if(gTrqRampActive == 0)
+    {
+        gFinalTorque_Nm = DiffTrqReq_Nm;
+        gTrqNumLoops = abs(((DiffTrqReq_Nm - gCurrentTrq_Nm) * 1000 / DiffTrqRate_NmpS)/cLoopRate);
+      
+        if(gTrqNumLoops == 0)
+        {
+        gTrqNumLoops = 1;
+       }
+
+        gTrqStepSize = (DiffTrqReq_Nm - gCurrentTrq_Nm) / gTrqNumLoops;
+        gDeltaMagTrq = abs(DiffTrqReq_Nm - gCurrentTrq_Nm);
+        gTrqRampActive = 1;
+        SetTimer(TrqLoop_tmr, cLoopRate);
+
+    }
+    else
+    {
+        write("Warning - prior torque function did not complete before another was executed");
+    }
+
+    LoopCntr_Trq = 0;
+
+}
+
+testfunction TesterPresOn ()
+{
+    DiagStartTesterPresent("PSCM");
+}
+
+testfunction TesterPresOff ()
+{
+    DiagStopTesterPresent("PSCM");
+}
+
+on preStart
+{
+
+}
+
+InitializeParms (float Tbar_NmpDeg, float Sensor_VpDeg, int ColPosType, int MSBType, float GearRatio, int TurnsCntrEnable)
+{
+    gTbar_NmpDeg = Tbar_NmpDeg;
+    gTrqSensor_VpDeg = Sensor_VpDeg;
+    gColPosSensorType = ColPosType;
+    gMsbSensorType = MSBType;
+    gGearRatio = GearRatio;
+    gTurnsCntrEnable = TurnsCntrEnable;
+
+   InitializeIO ();
+}
+
+testfunction SimulateVariableOffCycle()
+{
+	  ActualOffTime = 0;
+    IgnOff = 0;
+    SetTimer(Countdown_tmr, 10);
+    TestWaitforTimeout(VariableTime);
+
+    if(VariableTime > 5000)
+    {
+        VariableTime = 10;  //Value of 0 changed to 10 2013Jan17
+        SysSetVariableInt("SpecialTest", "IgnOffTime", VariableTime);
+    }
+
+}
+
+
+on timer Countdown_tmr
+{
+    
+    ActualOffTime = ActualOffTime + 10;
+    //Write("ACTUAL OFF TIME = %d", ActualOffTime);
+
+    if(ActualOffTime >= VariableTime)
+    {
+        ActualOffTime = 0;
+        VariableTime = VariableTime + 10;
+        SysSetVariableInt("SpecialTest", "IgnOffTime", VariableTime);
+        Write("New timer is %d", VariableTime);
+        CancelTimer(Countdown_tmr);
+    }
+    else
+    { 
+        SetTimer(Countdown_tmr, 10);
+     }
+
+    if ((ActualOffTime >= 5000) && (IgnOff == 0))
+    {        
+        /* Turn off hard ignition and cancel timer */
+        @sysvar::VTS::Ignition::Active = 0;
+        IgnOff = 1;
+    }
+
+}
+testfunction InitializeIO ()
+{
+    /* Set voltage stimulation mode */
+    sysvar::VTS::Torque1.SetStimulationMode(1);
+    sysvar::VTS::Torque2.SetStimulationMode(1);
+    sysvar::VTS::Position1.SetStimulationMode(1);
+    sysvar::VTS::Position2.SetStimulationMode(1);
+    sysvar::VTS::Position3.SetStimulationMode(1);
+    sysvar::VTS::Position4.SetStimulationMode(1);
+    sysvar::VTS::Motor1.SetStimulationMode(1);
+    sysvar::VTS::Motor2.SetStimulationMode(1);
+    sysvar::VTS::Motor3.SetStimulationMode(1);
+    sysvar::VTS::Motor4.SetStimulationMode(1);
+    sysvar::VTS::Motor5.SetStimulationMode(1);
+    sysvar::VTS::Motor6.SetStimulationMode(1);
+    sysvar::VTS::Motor7.SetStimulationMode(1);
+    sysvar::VTS::DigTrq1.SetStimulationMode(1);
+    sysvar::VTS::DigTrq2.SetStimulationMode(1);
+    sysvar::VTS::DigTrq1.StartStimulation ();
+    sysvar::VTS::DigTrq2.StartStimulation ();
+
+
+   
+    /* Set curve type constant value */
+    sysvar::VTS::Torque1.SetCurveType(0);
+    sysvar::VTS::Torque2.SetCurveType(0);
+    sysvar::VTS::Position1.SetCurveType(0);
+    sysvar::VTS::Position2.SetCurveType(0);
+    sysvar::VTS::Position3.SetCurveType(0);
+    sysvar::VTS::Position4.SetCurveType(0);
+    sysvar::VTS::Motor1.SetCurveType(0);
+    sysvar::VTS::Motor2.SetCurveType(0);
+    sysvar::VTS::Motor3.SetCurveType(0);
+    sysvar::VTS::Motor4.SetCurveType(0);
+    sysvar::VTS::Motor5.SetCurveType(0);
+    sysvar::VTS::Motor6.SetCurveType(0);
+    sysvar::VTS::Motor7.SetCurveType(0);
+    sysvar::VTS::DigTrq1.SetCurveType(1);
+    sysvar::VTS::DigTrq2.SetCurveType(1);
+
+    /* Set output voltages to a starting value */
+
+    @sysvar::VTS::Torque1::Voltage = 2.5;
+    @sysvar::VTS::Torque2::Voltage = 2.5;
+
+
+    if((gColPosSensorType == cDTWRel) || (gColPosSensorType == cDTWAbs)) 
+    {
+        @sysvar::VTS::Position1::Voltage = 2.5;
+        @sysvar::VTS::Position2::Voltage = 0.0;
+        @sysvar::VTS::Position3::Voltage = 2.5;
+    }
+    else
+    {
+        /* Put NCS init here */
+        @sysvar::VTS::Position1::Voltage = cP12Amp_V * sin(0 * 2 * PI / 360) + cP12Offset_V;
+        @sysvar::VTS::Position2::Voltage = cP12Amp_V * cos(0 * 2 * PI / 360) + cP12Offset_V;;
+        @sysvar::VTS::Position3::Voltage = cP34Amp_V * SIN(_floor((0+900) / 180) * 36 * 2 * PI / 360) + cP34Offset_V;
+        @sysvar::VTS::Position4::Voltage = cP34Amp_V * COS(_floor((0+900) / 180) * 36 * 2 * PI / 360) + cP34Offset_V;
+
+    }
+    
+    if(gMsbSensorType == cDigitalMsb)
+    {
+        @sysvar::VTS::Motor1::Voltage = 5.0;
+        @sysvar::VTS::Motor2::Voltage = 0.0;
+        @sysvar::VTS::Motor3::Voltage = 5.0;
+        @sysvar::VTS::Motor4::Voltage = 5.0;
+        @sysvar::VTS::Motor5::Voltage = 0.0;
+        @sysvar::VTS::Motor6::Voltage = 2.5; //Used for Tach1 when dig MSB
+        @sysvar::VTS::Motor7::Voltage = 2.5; //Used for Tach2 when dig MSB
+    }
+    else
+    {
+        /* Put analog MSB init here */
+        @sysvar::VTS::Motor1::Voltage = cAnalogMsbAmp_V * sin(0) + cAnalogMsbOffset_V;
+        @sysvar::VTS::Motor2::Voltage = cAnalogMsbAmp_V * cos(0) + cAnalogMsbOffset_V;
+        @sysvar::VTS::Motor3::Voltage = cAnalogMsbAmp_V * SIN(pi) + cAnalogMsbOffset_V;
+        @sysvar::VTS::Motor4::Voltage = cAnalogMsbAmp_V * COS(pi) + cAnalogMsbOffset_V;
+        
+        /*Used for Turns Counter when Analog MSB*/
+        @sysvar::VTS::Motor6::Voltage = cAnalogTcAmp_V * sin(0+(45 * PI / 360)) + cAnalogTcOffset_V;
+        @sysvar::VTS::Motor7::Voltage = cAnalogTcAmp_V * cos(0+(45 * PI / 360)) + cAnalogTcOffset_V;
+    
+
+    }
+
+    /* Set supply to 12.0V as a starting point with ignition On */
+    sysvar::VTS::PowerSupply.SetInterconnectionMode (8);
+
+    // The factor of the external power supply is transmitted to the VT7001:
+    sysvar::VTS::ExtSupp1.SetRefVoltageMode (1, 0.167);
+    sysvar::VTS::ExtSupp1.SetMaxCurrentMode (1, 0.2);
+
+    // Set initial conditions to 12V and current limit to 10A
+    @sysvar::VTS::ExtSupp1::RefVoltage = 12.0;
+    @sysvar::VTS::ExtSupp1::MaxCurrent = 20.0;
+
+    @sysvar::VTS::Battery::Active = 1;
+    @sysvar::VTS::Ignition::Active = 1;
+
+    
+    /* Set PWM settings */
+
+    @sysvar::VTS::DigTrq1::PWMOutputFreq = 4000;
+    @sysvar::VTS::DigTrq2::PWMOutputFreq = 4000;
+
+}
+
+CalcTurnsCounter ()
+{
+
+    float MtrDegMech;
+    MtrDegMech = Mod((gCurrentPos_Deg * gGearRatio ) +45, 360);
+  
+    //write("Calc TC");
+    gMtr6_V = cAnalogTcAmp_V * cos(MtrDegMech * 2 * PI / 360) + cAnalogTcOffset_V;
+    gMtr7_V = cAnalogTcAmp_V * sin(MtrDegMech * 2 * PI / 360) + cAnalogTcOffset_V;
+
+}
+
+testfunction ActivateTrqSweep (float Ampl, float Offset, float Start_Frq, float End_Frq, float Duration_Sec, int Wavetype)
+{
+
+    //Changing inputs to global variables
+    gAmpl_Trq = Ampl;
+    gOffset_Trq= Offset;
+    gStart_Frq_Trq = Start_Frq;
+    gEnd_Frq_Trq = End_Frq;
+    gDuration_Trq_Sec = Duration_Sec;
+    gWaveFormType_Trq = Wavetype;
+
+    gTrqFreq_Hz = Start_Frq;
+    
+    /* Compute data needed for step size of freq ONCE per request */
+    if(gTrqRampActive == 0)
+    {
+        float   gDurationMS;
+
+        //Make duration into millseconds & sets the Starting Hz value
+        gDurationMS = gDuration_Trq_Sec * 1000;
+
+        gStepsize_HzpMS_Trq = (gEnd_Frq_Trq - gStart_Frq_Trq)/gDurationMS;
+        //write("Step size = %f",  gStepsize_HzpMS_Trq);
+        
+        // Identify starting torque when sine wave is to be applied
+        gStartingSineTorque_Nm = gCurrentTrq_Nm;       
+
+        // Indicate sine sweep, reset loop counter and start timed loop
+        gTrqRampActive = 2;
+
+        LoopCntr_Trq = 0;
+        SetTimer(TrqLoop_tmr, cLoopRate);
+
+    }
+    else
+    {
+        // Function called prior to completion of earlier event
+        write("Warning - prior torque function did not complete before another was executed");
+    }             
+} 
+
+TorqueSineSweep ()
+{
+    float temp;
+    //gCurrentTrq_Nm = gCurrentTrq_Nm + gTrqStepSize;
+
+   if (gTrqRampActive == 2)
+   {
+        //Compute sinusoidal term 
+        temp = gAmpl_Trq * (sin(2 * Pi * gTrqFreq_Hz * LoopCntr_Trq / 1000)) + gOffset_Trq;
+        //write("temp = %f", temp);
+
+
+        gCurrentTrq_Nm = gStartingSineTorque_Nm + temp;
+        gTrqFreq_Hz = gTrqFreq_Hz + gStepsize_HzpMS_Trq; 
+       
+
+    }
+
+}
+
+TorqueLinearRamp ()
+{
+        // Called by 1ms loop
+        gCurrentTrq_Nm = gCurrentTrq_Nm + gTrqStepSize;
+
+}
+
+BatteryLinearRamp ()
+{
+    if(gVoltRampActive == 1)
+    {
+        gCurrentVolt_V = gCurrentVolt_V + gVoltStepSize;
+
+        /* Check for completion of ramp to final destination */
+        gDeltaMagVolt = gDeltaMagVolt - abs(gVoltStepSize);
+
+    }
+    else
+    {
+        write("Warning - prior torque function did not complete before another was executed");
+    }
+
+    LoopCntr_Batt = 0;
+
+}
+
+BatterySineSweep ()
+{
+
+    float temp1;
+
+   if (gVoltRampActive == 2)
+   {
+        //Compute sinusoidal term
+        temp1 = gAmpl_Batt * (sin(2 * Pi * gBattFreq_Hz * LoopCntr_Batt / 100)) + gOffset_Batt;
+        //write("Batt temp1 = %f", temp1);
+        
+        
+        // Update Battery Voltage
+        gCurrentVolt_V = gStartingSineBatt_V + temp1;
+        gBattFreq_Hz = gBattFreq_Hz + gStepsize_HzpMS_Batt; 
+
+    }
+
+}
+
+testfunction ActivateBatterySweep (float Ampl, float Offset, float Start_Frq, float End_Frq, float Duration_Sec, int Wavetype)
+{
+    //Changing inputs to global variables
+    gAmpl_Batt = Ampl;
+    gOffset_Batt= Offset;
+    gStart_Frq_Batt = Start_Frq;
+    gEnd_Frq_Batt = End_Frq;
+    gDuration_Batt_Sec = Duration_Sec;
+    gWaveFormType_Batt = Wavetype;
+
+    gBattFreq_Hz = Start_Frq;
+    
+    /* Compute data needed for step size of freq ONCE per request */
+    if(gVoltRampActive == 0)
+    {
+        float   gDurationMS;
+
+        //Make duration into millseconds & sets the Starting Hz value
+        gDurationMS = gDuration_Batt_Sec * 100;
+
+        gStepsize_HzpMS_Batt = (gEnd_Frq_Batt - gStart_Frq_Batt)/gDurationMS;
+        write("Batt Step Size Freq = %f", gStepsize_HzpMS_Batt);
+        
+        // Identify starting voltage when sine wave is to be applied
+        gStartingSineBatt_V = gCurrentVolt_V;       
+
+        // Indicate sine sweep, reset loop counter and start timed loop
+        gVoltRampActive = 2;
+
+        LoopCntr_Batt = 0;
+        SetTimer(VoltageLoop_tmr, cLoopRate);
+
+    }
+    else
+    {
+        // Function called prior to completion of earlier event
+        write("Warning - prior battery function did not complete before another was executed");
+    }             
+
+}
+
+testfunction ActivatePositionSweep (float Ampl, float Offset, float Start_Frq, float End_Frq, float Duration_Sec, int Wavetype)
+{
+   //Changing inputs to global variables
+    gAmpl_Pos = Ampl;
+    gOffset_Pos= Offset;
+    gStart_Frq_Pos = Start_Frq;
+    gEnd_Frq_Pos = End_Frq;
+    gDuration_Pos_Sec = Duration_Sec;
+    gWaveFormType_Pos = Wavetype;
+
+    gPosFreq_Hz = Start_Frq;
+    
+    /* Compute data needed for step size of freq ONCE per request */
+    if(gPosRampActive == 0)
+    {
+        float   gDurationMS;
+
+        //Make duration into millseconds & sets the Starting Hz value
+        gDurationMS = gDuration_Pos_Sec * 1000;
+
+        gStepsize_HzpMS_Pos = (gEnd_Frq_Pos - gStart_Frq_Pos)/gDurationMS;
+        //write("Step size = %f",  gStepsize_HzpMS_Trq);
+        
+        // Identify starting torque when sine wave is to be applied
+        gStartingSinePos_Deg = gCurrentPos_Deg;       
+
+        // Indicate sine sweep, reset loop counter and start timed loop
+        gPosRampActive = 2;
+
+        LoopCntr_Pos = 0;
+        SetTimer(PosLoop_tmr, cLoopRate);
+
+        write("Got here 1");
+
+    }
+    else
+    {
+        // Function called prior to completion of earlier event
+        write("Warning - prior position function did not complete before another was executed");
+    }             
+
+
+}
+
+PositionLinearRamp ()
+{
+        // Called by 1ms loop
+        gCurrentPos_Deg = gCurrentPos_Deg + gPosStepSize;
+
+}
+
+PositionSineSweep ()
+{
+    float temp;
+
+   if (gPosRampActive == 2)
+   {
+        //Compute sinusoidal term 
+        temp = gAmpl_Pos * (sin(2 * Pi * gPosFreq_Hz * LoopCntr_Pos / 1000)) + gOffset_Pos;
+        //write("temp pos = %f", temp);
+
+
+        gCurrentPos_Deg = gStartingSinePos_Deg + temp;
+        gPosFreq_Hz = gPosFreq_Hz + gStepsize_HzpMS_Pos; 
+       
+    }
+
+}
+
+testfunction TorqueSensorFault ()
+{
+    @sysvar::VTS::Torque1::Voltage = 0.5;
+    @sysvar::VTS::Torque2::Voltage = 0.5;
+}
+
+testfunction RemoveTorqueSensorFault ()
+{
+     @sysvar::VTS::Torque1::Voltage = 2.5;
+     @sysvar::VTS::Torque2::Voltage = 2.5;
+}
+
+
+
+
+
+testfunction TestInformation()
+{
+  testReportAddEngineerInfo("Test Engineer", " Makarand Pawar");
+  testReportAddSUTInfo("EPS", "PSA_BMPV");
+  testReportAddSetupInfo("ToolInformation", "CANoe 8.2.40");
+  testReportAddSetupInfo("eTool Information", "02.02.00.01");
+  testReportAddSetupInfo("Tool Information", "CANdela 8.0");
+  testReportAddSetupInfo("Tool Information", "CANape 10.0 SP1");
+  testReportAddSetupInfo("DBC", "Matrice_DAE_B_MPV_20130906_102629_TH");
+  testReportAddSetupInfo("PDX", "DAE_B_MPV_UDS_UDIR_DAE_BMPV________1_2");
+  testReportAddSetupInfo("ECU Info",  "38026779-001");
+  testReportAddSetupInfo("ECU Software Version","02.00.05");
+  testReportAddSetupInfo("ECU Calibration Version","5635");
+  testReportAddSetupInfo("ECU Hardware Version","Family Theta Beta 1.0");
+}
+

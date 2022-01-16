@@ -1,0 +1,37 @@
+/*@!Encoding:1252*/
+variables
+{
+ 
+}
+
+on start
+{
+
+  //ILNodeControlStart(1);
+
+//GMILActivateVN(1);
+  //GMILActivateVN(1);
+//IlActivateVN(1);
+  ILActivateClamp15();
+  
+  
+  
+}
+
+on sysvar MESSAGES::pnlMOT1_disable
+{
+   if (@MESSAGES::pnlMOT1_disable == 1)
+      ILDisableMsg("MOT1");
+    else
+      ILEnableMsg("MOT1");
+        
+}
+
+on sysvar MESSAGES::pnlMOT3_disable
+{
+   if (@MESSAGES::pnlMOT3_disable == 1)
+      ILDisableMsg("MOT3");
+    else
+      ILEnableMsg("MOT3");
+        
+}

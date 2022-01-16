@@ -1,0 +1,917 @@
+includes
+{
+  
+}
+
+variables
+{
+//*********************************************
+//Variables for Message Rates
+
+    //ID of message to test
+    int getCANID = 0;
+
+    //The number of message samples to test over
+    long TotalCnt = 0;
+
+    //max time to mwait for message (timeout) in milliseconds
+    int TimeOut = 0;
+
+    //This value is set when message is received
+    int GotMessage = 0;
+
+    //time of message
+    float Previous_Message_Time = 0;
+    float Message_Time = 0;
+    float Current_Message_Rate = 0;
+    float Sum_Message_Rate = 0;
+    float Running_Average_Message_Rate = 0;
+    float Maximum_Message_Rate = 0;
+    float Minimum_Message_Rate = 0;
+
+    //counts the message samples
+    int SampleCounter = 0;  
+
+//*********************************************
+//Variables for Bus identification
+  
+    //identifies Bus
+    dword contextCAN = 0x00010000;
+  
+    //identifies which Bus and channel to use
+    dword context = 0;  
+//*********************************************  
+  
+    //stores number of bytes in message
+    long byte_cnt = 0;
+
+//*********************************************
+//Variables for used to parse NTC messages  
+  
+    // Counters to navigate NTC_Array
+    int i = 0, j = 0, k = 0;
+    
+    // Counter to navigate NTC message
+    int B_num = 0;
+    
+    // Array to store NTCs
+    byte NTC_Array[15][5];
+    
+    // Flag used to increment how many NTC response messages have been received
+    // 12 total messages required to receive 15 NTCs
+    int NTC_msg_flag = 0;
+    
+    // Array to store NTC messages received
+    message USDT_Resp_From_EHPS_EPS_HS NTC[12];
+//*********************************************
+//Variables for used to parse UUDT_Resp_From_EHPS_EPS_HS messages  
+  
+    // Counters to navigate NTC_Array
+    
+    
+    // Counter to navigate NTC message
+   
+    
+    // Array to store NTCs
+   
+    
+    // Flag used to increment how many UUDT_HS response messages have been received
+    int UUDT_msg_flag = 0;
+
+    
+    // Array to store CTC messages received
+    message UUDT_Resp_From_EHPS_EPS_HS UUDT_HS[2];
+
+//*********************************************  
+}
+
+on message USDT_Resp_From_EHPS_EPS_HS
+{
+  message USDT_Resp_From_EHPS_EPS_HS temp;
+  
+  temp = this;
+  
+//*****************************************************************************************************************  
+//* In TAE, wait 500ms after USDT_Req_to_EHPS_EPS_HS before checking the state of any variables in this function. *
+//*****************************************************************************************************************
+  
+//  Write("%X %X %X %X %X %X %X %X",
+//        temp.BYTE(0), temp.BYTE(1),temp.BYTE(2), temp.BYTE(3), temp.BYTE(4), temp.BYTE(5), temp.BYTE(6), temp.BYTE(7));
+
+/*
+  Store requested NTC results in a 12 row long response table as follows:
+    10 4E 62 FD 13 00 00 00
+    21 00 FF 00 00 00 00 FF
+    22 00 00 00 00 FF 00 00
+    23 00 00 FF 00 00 00 00
+    24 FF 00 00 00 00 FF 00
+    25 00 00 00 FF 00 00 00
+    26 00 FF 00 00 00 00 FF
+    27 00 00 00 00 FF 00 00
+    28 00 00 FF 00 00 00 00
+    29 FF 00 00 00 00 FF 00
+    2A 00 00 00 FF 00 00 00
+    2B 00 FF AA AA AA AA AA   
+    
+    Need to parse these 12 messages and check for the 15 potential NTCs
+*/    
+// Look for 10 4E 62 FD 13
+// If found, populate first 3 entries of array
+// Set a flag that this message was found
+// If flag is 1, then look for 21
+// If found, finish populating array where you left off and continue until byte7 of message
+// Increment flag
+// If flag is 2, then look for 22
+// If found, continue populating array where you left off and continue until byte7 of message
+// etc
+
+  
+// Store Nexteer Diagnostic Trouble Codes in NTC[] array for later access and parsing.
+        
+  switch (temp.BYTE(0))
+  {
+    
+      Case 0x10:
+          if (temp.BYTE(1) == 0x4E && 
+              temp.BYTE(2) == 0x62 && temp.BYTE(3) == 0xFD && 
+              temp.BYTE(4) == 0x13)
+          {
+              NTC[0] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+  
+//          Write("DEBUG - NTC[0] = %X %X %X %X %X %X %X %X",
+//              NTC[0].BYTE(0), NTC[0].BYTE(1),NTC[0].BYTE(2), NTC[0].BYTE(3), NTC[0].BYTE(4), NTC[0].BYTE(5), NTC[0].BYTE(6), NTC[0].BYTE(7));
+
+          break;
+    
+      Case 0x21:
+          if (NTC_msg_flag == 1)
+          {
+              NTC[1] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[1] = %X %X %X %X %X %X %X %X",
+//              NTC[1].BYTE(0), NTC[1].BYTE(1),NTC[1].BYTE(2), NTC[1].BYTE(3), NTC[1].BYTE(4), NTC[1].BYTE(5), NTC[1].BYTE(6), NTC[1].BYTE(7));
+
+          break;
+          
+      Case 0x22:
+          if (NTC_msg_flag == 2)
+          {
+              NTC[2] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[2] = %X %X %X %X %X %X %X %X",
+//              NTC[2].BYTE(0), NTC[2].BYTE(1),NTC[2].BYTE(2), NTC[2].BYTE(3), NTC[2].BYTE(4), NTC[2].BYTE(5), NTC[2].BYTE(6), NTC[2].BYTE(7));
+
+          break;
+
+// Tests for MTO only utilize first 3 NTCs.  Remove comment if its necessary to check additional NTCs.
+/*          
+      Case 0x23:
+          if (NTC_msg_flag == 3)
+          {
+              NTC[3] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[3] = %X %X %X %X %X %X %X %X",
+//              NTC[3].BYTE(0), NTC[3].BYTE(1),NTC[3].BYTE(2), NTC[3].BYTE(3), NTC[3].BYTE(4), NTC[3].BYTE(5), NTC[3].BYTE(6), NTC[3].BYTE(7));
+
+          break;
+                    
+      Case 0x24:
+          if (NTC_msg_flag == 4)
+          {
+              NTC[4] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[4] = %X %X %X %X %X %X %X %X",
+//              NTC[4].BYTE(0), NTC[4].BYTE(1),NTC[4].BYTE(2), NTC[4].BYTE(3), NTC[4].BYTE(4), NTC[4].BYTE(5), NTC[4].BYTE(6), NTC[4].BYTE(7));
+
+          break;
+                    
+      Case 0x25:
+          if (NTC_msg_flag == 5)
+          {
+              NTC[5] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[5] = %X %X %X %X %X %X %X %X",
+//              NTC[5].BYTE(0), NTC[5].BYTE(1),NTC[5].BYTE(2), NTC[5].BYTE(3), NTC[5].BYTE(4), NTC[5].BYTE(5), NTC[5].BYTE(6), NTC[5].BYTE(7));
+
+          break;
+                    
+      Case 0x26:
+          if (NTC_msg_flag == 6)
+          {
+              NTC[6] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[6] = %X %X %X %X %X %X %X %X",
+//              NTC[6].BYTE(0), NTC[6].BYTE(1),NTC[6].BYTE(2), NTC[6].BYTE(3), NTC[6].BYTE(4), NTC[6].BYTE(5), NTC[6].BYTE(6), NTC[6].BYTE(7));
+
+          break;
+                    
+      Case 0x27:
+          if (NTC_msg_flag == 7)
+          {
+              NTC[7] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[7] = %X %X %X %X %X %X %X %X",
+//              NTC[7].BYTE(0), NTC[7].BYTE(1),NTC[7].BYTE(2), NTC[7].BYTE(3), NTC[7].BYTE(4), NTC[7].BYTE(5), NTC[7].BYTE(6), NTC[7].BYTE(7));
+
+          break;
+                    
+      Case 0x28:
+          if (NTC_msg_flag == 8)
+          {
+              NTC[8] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[8] = %X %X %X %X %X %X %X %X",
+//              NTC[8].BYTE(0), NTC[8].BYTE(1),NTC[8].BYTE(2), NTC[8].BYTE(3), NTC[8].BYTE(4), NTC[8].BYTE(5), NTC[8].BYTE(6), NTC[8].BYTE(7));
+
+          break;
+                    
+      Case 0x29:
+          if (NTC_msg_flag == 9)
+          {
+              NTC[9] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[9] = %X %X %X %X %X %X %X %X",
+//              NTC[9].BYTE(0), NTC[9].BYTE(1),NTC[9].BYTE(2), NTC[9].BYTE(3), NTC[9].BYTE(4), NTC[9].BYTE(5), NTC[9].BYTE(6), NTC[9].BYTE(7));
+
+          break;
+                    
+      Case 0x2A:
+          if (NTC_msg_flag == 10)
+          {
+              NTC[10] = this;    
+              NTC_msg_flag++;
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[10] = %X %X %X %X %X %X %X %X",
+//              NTC[10].BYTE(0), NTC[10].BYTE(1),NTC[10].BYTE(2), NTC[10].BYTE(3), NTC[10].BYTE(4), NTC[10].BYTE(5), NTC[10].BYTE(6), NTC[10].BYTE(7));
+
+          break;
+                    
+      Case 0x2B:
+          if (NTC_msg_flag == 11)
+          {
+              NTC[11] = this;    
+              NTC_msg_flag++;   //Will set NTC_msg_flag = 12 indicating the entire NTC message has been captured
+          }
+          else NTC_msg_flag = 0;
+            
+//          Write("DEBUG - NTC[11] = %X %X %X %X %X %X %X %X",
+//              NTC[11].BYTE(0), NTC[11].BYTE(1),NTC[11].BYTE(2), NTC[11].BYTE(3), NTC[11].BYTE(4), NTC[11].BYTE(5), NTC[11].BYTE(6), NTC[11].BYTE(7));
+
+          break;
+*/
+//  Remove comment if its necessary to check additional NTCs.      
+          
+      //Default
+      Default:
+          NTC_msg_flag = 0;
+          break;
+  }
+          
+//  Write("DEBUG - NTC_msg_flag = %d", NTC_msg_flag);
+  
+
+// Parse Nexteer Diagnostic Trouble Codes stored in NTC[] array.
+ 
+if (NTC_msg_flag == 3) //  Replace '3' with 12 if entire NTC list needs to be stored
+{
+  B_num = 5;
+  k = 0;
+    
+    //Loop to parse NTC response and store it in a 15row x 5 column array
+    for(i=0; i<3; i++)                     //Rows loop. Replace '3' with 15 if entire NTC list needs to be stored
+  	{
+  		for(j=0; j<5; j++)                    //Columns loop.
+  		{
+        NTC_Array[i][j] = NTC[k].BYTE(B_num);
+        
+        B_num++;       
+        
+        //Message only contains 8 bytes so we must reset the byte counter 
+        //to 1 and increment the message counter k.
+        //Note: Byte 0 of the message does not contain NTC data.
+        if (B_num > 7)                      
+        {
+            B_num = 1;
+            k++;
+        }
+      } 
+    }
+    
+    //Make NTC arrays accessible to TAE
+    @sysvar::K2XX::NTC1_DTCnum = (NTC_Array[0][0]<<8) + NTC_Array[0][1];
+    @sysvar::K2XX::NTC1_Parameter = NTC_Array[0][2];
+    @sysvar::K2XX::NTC1_StatusByte = NTC_Array[0][3];    
+    @sysvar::K2XX::NTC1_AgingCnt = NTC_Array[0][4];
+    
+    @sysvar::K2XX::NTC2_DTCnum = (NTC_Array[1][0]<<8) + NTC_Array[1][1];
+    @sysvar::K2XX::NTC2_Parameter = NTC_Array[1][2];
+    @sysvar::K2XX::NTC2_StatusByte = NTC_Array[1][3];    
+    @sysvar::K2XX::NTC2_AgingCnt = NTC_Array[1][4];
+
+    @sysvar::K2XX::NTC3_DTCnum = (NTC_Array[2][0]<<8) + NTC_Array[2][1];
+    @sysvar::K2XX::NTC3_Parameter = NTC_Array[2][2];
+    @sysvar::K2XX::NTC3_StatusByte = NTC_Array[2][3];    
+    @sysvar::K2XX::NTC3_AgingCnt = NTC_Array[2][4];
+
+//  Remove comment if its necessary to check additional NTCs.    
+/*
+    @sysvar::K2XX::NTC4_DTCnum = (NTC_Array[3][0]<<8) + NTC_Array[3][1];
+    @sysvar::K2XX::NTC4_Parameter = NTC_Array[3][2];
+    @sysvar::K2XX::NTC4_StatusByte = NTC_Array[3][3];    
+    @sysvar::K2XX::NTC4_AgingCnt = NTC_Array[3][4];
+
+    @sysvar::K2XX::NTC5_DTCnum = (NTC_Array[4][0]<<8) + NTC_Array[4][1];
+    @sysvar::K2XX::NTC5_Parameter = NTC_Array[4][2];
+    @sysvar::K2XX::NTC5_StatusByte = NTC_Array[4][3];    
+    @sysvar::K2XX::NTC5_AgingCnt = NTC_Array[4][4];
+
+    @sysvar::K2XX::NTC6_DTCnum = (NTC_Array[5][0]<<8) + NTC_Array[5][1];
+    @sysvar::K2XX::NTC6_Parameter = NTC_Array[5][2];
+    @sysvar::K2XX::NTC6_StatusByte = NTC_Array[5][3];    
+    @sysvar::K2XX::NTC6_AgingCnt = NTC_Array[5][4];
+
+    @sysvar::K2XX::NTC7_DTCnum = (NTC_Array[6][0]<<8) + NTC_Array[6][1];
+    @sysvar::K2XX::NTC7_Parameter = NTC_Array[6][2];
+    @sysvar::K2XX::NTC7_StatusByte = NTC_Array[6][3];    
+    @sysvar::K2XX::NTC7_AgingCnt = NTC_Array[6][4];
+
+    @sysvar::K2XX::NTC8_DTCnum = (NTC_Array[7][0]<<8) + NTC_Array[7][1];
+    @sysvar::K2XX::NTC8_Parameter = NTC_Array[7][2];
+    @sysvar::K2XX::NTC8_StatusByte = NTC_Array[7][3];    
+    @sysvar::K2XX::NTC8_AgingCnt = NTC_Array[7][4];
+
+    @sysvar::K2XX::NTC9_DTCnum = (NTC_Array[8][0]<<8) + NTC_Array[8][1];
+    @sysvar::K2XX::NTC9_Parameter = NTC_Array[8][2];
+    @sysvar::K2XX::NTC9_StatusByte = NTC_Array[8][3];    
+    @sysvar::K2XX::NTC9_AgingCnt = NTC_Array[8][4];
+
+    @sysvar::K2XX::NTC10_DTCnum = (NTC_Array[9][0]<<8) + NTC_Array[9][1];
+    @sysvar::K2XX::NTC10_Parameter = NTC_Array[9][2];
+    @sysvar::K2XX::NTC10_StatusByte = NTC_Array[9][3];    
+    @sysvar::K2XX::NTC10_AgingCnt = NTC_Array[9][4];
+
+    @sysvar::K2XX::NTC11_DTCnum = (NTC_Array[10][0]<<8) + NTC_Array[10][1];
+    @sysvar::K2XX::NTC11_Parameter = NTC_Array[10][2];
+    @sysvar::K2XX::NTC11_StatusByte = NTC_Array[10][3];    
+    @sysvar::K2XX::NTC11_AgingCnt = NTC_Array[10][4];
+
+    @sysvar::K2XX::NTC12_DTCnum = (NTC_Array[11][0]<<8) + NTC_Array[11][1];
+    @sysvar::K2XX::NTC12_Parameter = NTC_Array[11][2];
+    @sysvar::K2XX::NTC12_StatusByte = NTC_Array[11][3];    
+    @sysvar::K2XX::NTC12_AgingCnt = NTC_Array[11][4];
+
+    @sysvar::K2XX::NTC13_DTCnum = (NTC_Array[12][0]<<8) + NTC_Array[12][1];
+    @sysvar::K2XX::NTC13_Parameter = NTC_Array[12][2];
+    @sysvar::K2XX::NTC13_StatusByte = NTC_Array[12][3];    
+    @sysvar::K2XX::NTC13_AgingCnt = NTC_Array[12][4];
+
+    @sysvar::K2XX::NTC14_DTCnum = (NTC_Array[13][0]<<8) + NTC_Array[13][1];
+    @sysvar::K2XX::NTC14_Parameter = NTC_Array[13][2];
+    @sysvar::K2XX::NTC14_StatusByte = NTC_Array[13][3];    
+    @sysvar::K2XX::NTC14_AgingCnt = NTC_Array[13][4];   
+    
+    @sysvar::K2XX::NTC15_DTCnum = (NTC_Array[14][0]<<8) + NTC_Array[14][1];
+    @sysvar::K2XX::NTC15_Parameter = NTC_Array[14][2];
+    @sysvar::K2XX::NTC15_StatusByte = NTC_Array[14][3];    
+    @sysvar::K2XX::NTC15_AgingCnt = NTC_Array[14][4];
+*/  
+//  Remove comment if its necessary to check additional NTCs.    
+    
+    // Begin Debug
+    /*
+        for(i=0; i<15; i++)                     //Rows loop.
+      	{
+              Write("DEBUG - NTC_Array = %X %X %X %X %X",
+                  NTC_Array[i][0], NTC_Array[i][1], NTC_Array[i][2], NTC_Array[i][3], NTC_Array[i][4]);
+       	}
+    */
+    // End Debug       
+
+ }
+
+}
+
+on message UUDT_Resp_From_EHPS_EPS_HS
+{
+  message UUDT_Resp_From_EHPS_EPS_HS temp;
+  
+  temp = this;
+  
+//  Write("%X %X %X %X %X %X %X %X",
+//        temp.BYTE(0), temp.BYTE(1),temp.BYTE(2), temp.BYTE(3), temp.BYTE(4), temp.BYTE(5), temp.BYTE(6), temp.BYTE(7));
+
+/*
+  Store requested UUDT_HS messages in a 3 row long response table as follows:
+    81 XX XX XX XX 00 00 00
+    81 XX XX XX XX 00 00 00
+    81 XX XX XX XX 00 00 00 
+    
+    Need to parse these 3 messages and check for the 3 potential CTCs
+*/
+
+// Look for UUDT_Resp_From_EHPS_EPS_HS
+// If found, create a 3 deep buffer for the messages
+
+
+  
+// Store Nexteer Diagnostic Trouble Codes in NTC[] array for later access and parsing.
+        
+
+          
+// Write("DEBUG - NTC_msg_flag = %d", NTC_msg_flag);
+  
+
+// Parse Nexteer Diagnostic Trouble Codes stored in NTC [] array.
+ 
+
+    
+// Make NTC arrays accessible to TAE
+
+    
+    
+
+    
+    
+
+ }
+
+Avg_Max_Min()
+{
+//This function used in conjunction with CalculateMessageRates()
+// Begin Debug
+/*
+    writetolog("GotMessage = %d", GotMessage);
+    writetolog("SampleCounter = %d", SampleCounter);
+    writetolog("TotalCnt = %d", TotalCnt);
+    writetolog("getCANID = %d", getCANID);
+    writetolog("sample captures @ %f", Message_Time);
+    writetolog("Current_Message_Rate %f", Current_Message_Rate);
+    writetolog("Previous_Message_Time %f", Previous_Message_Time);
+    writetolog("Sum_Message_Rate %f", Sum_Message_Rate);
+    writetolog("");
+*/
+// End Debug
+
+    //calculate current message rate
+    Current_Message_Rate = Message_Time - Previous_Message_Time;
+
+    //Calculate Maximum Message Rate
+    Max();
+
+    //Calculate Minimum Message Rate
+    Min();
+    
+    //Set Previous message time
+    Previous_Message_Time = Message_Time;
+    
+    //calculate running average
+    Sum_Message_Rate = Sum_Message_Rate + Current_Message_Rate;
+    Running_Average_Message_Rate = Sum_Message_Rate / SampleCounter;
+
+}
+
+Max ()
+{
+    //This function used in conjunction with CalculateMessageRates()
+    //Calculate Maximum Message Rate
+    if ((Maximum_Message_Rate < Current_Message_Rate) || (SampleCounter == 1))
+    {
+        Maximum_Message_Rate = Current_Message_Rate;
+    }
+
+// Begin Debug
+/*
+    writetolog("Maximum_Message_Rate %f", Maximum_Message_Rate);
+    writetolog("Current_Message_Rate %f", Current_Message_Rate);
+    writetolog("");
+*/
+// End Debug
+}
+
+Min ()
+{
+    //This function used in conjunction with CalculateMessageRates()
+    //Calculate Minimum Message Rate
+    if ((Minimum_Message_Rate > Current_Message_Rate) || (SampleCounter == 1))
+    {
+        Minimum_Message_Rate = Current_Message_Rate;
+    }
+
+}
+
+ResetRateVars ()
+{
+//This function used in conjunction with CalculateMessageRates()
+//ID of message to test
+int getCANID = 0;
+
+//The number of message samples to test over
+long TotalCnt = 0;
+
+//max time to mwait for message (timeout) in milliseconds
+int TimeOut = 0;
+
+//This value is set when message is received
+GotMessage = 0;
+
+//time of message
+Previous_Message_Time = 0;
+Message_Time = 0;
+Current_Message_Rate = 0;
+Sum_Message_Rate = 0;
+Running_Average_Message_Rate = 0;
+Maximum_Message_Rate = 0;
+Minimum_Message_Rate = 0;
+
+//counts the message samples
+SampleCounter = 0;
+
+//System Variables
+@sysvar::K2XX::SysVarAvgTxRate = 0;
+@sysvar::K2XX::SysVarMinTxRate = 0;
+@sysvar::K2XX::SysVarMaxTxRate = 0;
+
+}
+
+long Byte_Length (int getCANID)
+{
+  
+  if(getCANID == 0x148)
+  {
+      //assign message ID to temp
+      message 0x148 temp;
+
+      //return data field length of message
+      byte_cnt = canGetDataLength(temp);    
+      return (byte_cnt);
+  }
+  
+  if(getCANID == 0x778)
+  {
+      //assign message ID to temp
+      message 0x778 temp;
+
+      //return data field length of message
+      byte_cnt = canGetDataLength(temp);    
+      return (byte_cnt);
+  }
+  
+  if(getCANID == 0x542)
+  {
+      //assign message ID to temp
+      message 0x542 temp;
+
+      //return data field length of message
+      byte_cnt = canGetDataLength(temp);    
+      return (byte_cnt);
+  }
+  
+  if(getCANID == 0x642)
+  {
+      //assign message ID to temp
+      message 0x642 temp;
+
+      //return data field length of message
+      byte_cnt = canGetDataLength(temp);    
+      return (byte_cnt);
+  }
+    
+  if(getCANID == 0x184)
+  {
+      //assign message ID to temp
+      message 0x184 temp;
+
+      //return data field length of message
+      byte_cnt = canGetDataLength(temp);    
+      return (byte_cnt);
+  }
+    
+  if(getCANID == 0x1E5)
+  {
+      //assign message ID to temp
+      message 0x1E5 temp;
+
+      //return data field length of message
+      byte_cnt = canGetDataLength(temp);    
+      return (byte_cnt);
+  }
+    
+  if(getCANID == 0x1CA)
+  {
+      //assign message ID to temp
+      message 0x1CA temp;
+
+      //return data field length of message
+      byte_cnt = canGetDataLength(temp);    
+      return (byte_cnt);
+  }
+    
+  if(getCANID == 0x335)
+  {
+      //assign message ID to temp
+      message 0x335 temp;
+
+      //return data field length of message
+      byte_cnt = canGetDataLength(temp);    
+      return (byte_cnt);
+  }
+  
+  else
+  {
+      byte_cnt = 0;
+
+      write("CANID 0x%x not recognized. Aborting data field length calculation.", getCANID);
+      
+      return (byte_cnt);
+  }  
+  
+}
+
+testfunction CalculateMessageRate (int Bus_ch, int CANID, long NumSamples, int TimeOut_ms)
+{
+    //Reset All Variables
+    ResetRateVars();
+ 
+// Begin Debug
+/*  
+    context = getBusContext();
+    write("DEBUG - default CAN context = %x", context);
+*/
+// End Debug    
+  
+    //Select the bus containing the message
+    context = contextCAN | Bus_ch;
+    setBusContext(context);
+
+//Begin Debug
+/*  
+    write("DEBUG - set bus context to %x", context);
+    context = getBusContext();
+    write("DEBUG - current bus context = %x", context);
+    write("DEBUG - contextCAN = %x", Bus_ch);
+*/  
+//End Debug
+  
+    //initialize variables
+    getCANID = CANID;
+    TotalCnt = NumSamples;
+    TimeOut = TimeOut_ms; 
+  
+    //test sample counter
+    while (SampleCounter <= TotalCnt)
+    {
+
+        //find message ID 0x148 (Power_Steering_Information_HS)
+        GotMessage = TestWaitForMessage(getCANID, TimeOut);
+
+        //get message time in milliseconds
+        Message_Time = TimeNowNS()/1E6;
+
+        switch (GotMessage)
+            {
+
+                //Resume due to constraint violation
+                Case -2:
+                    writeToLog("ERROR - Could not get message 0x%x due to constraint violation", getCANID);
+                    write("ERROR - Could not get message 0x%x due to constraint violation", getCANID);
+                    SampleCounter = TotalCnt;
+                    break;
+
+                //General error, for example, functionality is not available
+                Case -1:
+                    writeToLog("ERROR - Could not get message 0x%x due to General error", getCANID);
+                    write("ERROR - Could not get message 0x%x due to General error", getCANID);
+                    SampleCounter = TotalCnt;
+                    break;
+
+                //Resume due to timeout
+                Case 0:
+                    writeToLog("ERROR - Could not get message 0x%x due to timeout", getCANID);
+                    writeToLog("Message Rate Exceeds Timout Value %d ms", TimeOut);
+                    write("ERROR - Could not get message 0x%x due to timeout", getCANID);
+                    write("Message Rate Exceeds Timout Value %d ms", TimeOut);
+                    SampleCounter = TotalCnt;
+                    break;
+        
+                //Resume due to event occurred (got message)
+                Case 1:
+
+                    if (SampleCounter == 0)
+                    {
+                        Previous_Message_Time = Message_Time;
+
+                    }
+                    else
+                    {
+                        Avg_Max_Min();
+                    }
+
+                    //SampleCounter++;
+                    break;
+
+                //Default
+                Default:
+                    writeToLog("ERROR - Could not get message 0x%x due to UnKnown error", getCANID);
+                    write("ERROR - Could not get message 0x%x due to UnKnown error", getCANID);
+                    SampleCounter = TotalCnt;
+                    break;
+             }
+             
+             //increment sample counter
+             SampleCounter++;
+    }
+
+    //write system variable(s)
+    @sysvar::K2XX::SysVarAvgTxRate = Running_Average_Message_Rate;
+    @sysvar::K2XX::SysVarMaxTxRate = Maximum_Message_Rate;
+    @sysvar::K2XX::SysVarMinTxRate = Minimum_Message_Rate;
+
+    //write ouput data
+    writetolog("Message ID = 0x%x", getCANID);
+    write("Message ID = 0x%x", getCANID);
+    writetolog("Sample Size = %d", TotalCnt);
+    write("Sample Size = %d", TotalCnt);
+
+    if (Running_Average_Message_Rate != 0)
+    {
+        writetolog("Running Average Rate (ms) = %f", Running_Average_Message_Rate);
+        write("Running Average Rate (ms) = %f", Running_Average_Message_Rate);
+        writetolog("Maximum Message Rate (ms) = %f", Maximum_Message_Rate);
+        write("Maximum Message Rate (ms) = %f", Maximum_Message_Rate);
+        writetolog("Minimum Message Rate (ms) = %f", Minimum_Message_Rate);
+        write("Minimum Message Rate (ms) = %f", Minimum_Message_Rate);
+    }
+    else
+    {
+        writetolog("Running Average Rate (ms) = NOT AVAILABLE");
+        write("Running Average Rate (ms) = NOT AVAILABLE");
+        writetolog("Maximum Message Rate (ms) = NOT AVAILABLE");
+        write("Maximum Message Rate (ms) = NOT AVAILABLE");
+        writetolog("Minimum Message Rate (ms) = NOT AVAILABLE");
+        write("Minimum Message Rate (ms) = NOT AVAILABLE");
+    }
+
+    Write("");
+
+}
+
+testfunction Parse_DTC_ReadbyStatus (long DTC_MaskRecord, int DTC_StatusByte)
+{
+  /*
+  dword TimeOut = 1000;
+  
+  diagRequest DiagnosticTroubleCodes_ReadByStatus gDTCReq;
+  diagResponse DiagnosticTroubleCodes_ReadByStatus gDTCResp;
+  
+  message 0x242 msg;
+  msg.DLC = 8;
+  msg.BYTE(0) = 0x03;
+  msg.BYTE(1) = 0xA9;
+  msg.BYTE(2) = 0x81;
+  msg.BYTE(3) = 0x12;
+  msg.BYTE(4) = 0x00;
+  msg.BYTE(5) = 0x00;
+  msg.BYTE(6) = 0x00;
+  msg.BYTE(7) = 0x00;
+  
+  output(msg);
+  
+  diagSendRequest(gDTCReq);
+  testWaitForDiagResponse(gDTCReq, 500);
+  diagGetRespParameterRaw(gDTCReq, qual, buffer, elcount(buffer));
+  
+  
+  
+  //find message ID 0x542 (UUDT_Resp_From_EHPS_EPS_HS)
+  GotMessage = TestWaitForMessage(0x542, TimeOut);
+
+  switch (GotMessage)
+      {
+
+          //Resume due to constraint violation
+          Case -2:
+              writeToLog("ERROR - Could not get message 0542 due to constraint violation");
+              write("ERROR - Could not get message 0x542 due to constraint violation");
+              break;
+
+          //General error, for example, functionality is not available
+          Case -1:
+              writeToLog("ERROR - Could not get message 0x542 due to General error");
+              write("ERROR - Could not get message 0x542 due to General error");
+              break;
+
+          //Resume due to timeout
+          Case 0:
+              writeToLog("ERROR - Could not get message 0x542 due to timeout");
+              writeToLog("Message Rate Exceeds Timout Value %d ms", TimeOut);
+              write("ERROR - Could not get message 0x542 due to timeout");
+              write("Message Rate Exceeds Timout Value %d ms", TimeOut);
+              break;
+  
+          //Resume due to event occurred (got message)
+          Case 1:
+              write("DEBUG - DgnInf_HS542 = 0x%c");
+             
+              break;
+
+          //Default
+          Default:
+              writeToLog("ERROR - Could not get message 0x542 due to UnKnown error");
+              write("ERROR - Could not get message 0x542 due to UnKnown error");
+              break;
+       }
+  */
+}
+
+testfunction DetermineElapsedTime ()
+{ 
+    Previous_Message_Time = Message_Time;
+  
+    //get message time in milliseconds
+    Message_Time = TimeNowNS()/1E6;
+  
+    Current_Message_Rate = Message_Time - Previous_Message_Time;
+
+    //write system variable(s)
+    @sysvar::K2XX::SysVarMinTxRate = Minimum_Message_Rate;
+
+    //write ouput data
+    writetolog("Message ID = 0x%x", getCANID);
+    write("Message ID = 0x%x", getCANID);
+
+    if (Message_Time != 0)
+    {
+        writetolog("Message_Time = %f", Current_Message_Rate);
+        write("Message_Time = %f", Current_Message_Rate);
+    }
+    else
+    {
+        writetolog("Message_Time = NOT AVAILABLE");
+        write("Message_Time = NOT AVAILABLE");
+    }
+
+    Write("");
+
+}
+
+testfunction DetermineMsgLength (int Bus_ch, int CANID)
+{
+    //Init Variables
+    byte_cnt = 0;
+  
+    //Select the bus containing the message  
+    context = contextCAN | Bus_ch;
+    setBusContext(context);
+  
+
+//Begin Debug
+/*  
+    context = getBusContext();
+    write("DEBUG - default CAN context = %x", context);  
+*/  
+//End Debug
+  
+    //initialize variables
+    getCANID = CANID;
+    
+    //return data field length of message
+    // Vector CAPL function "canGetDataLength" reads the DLC from the database, not the length of the message transmission
+    byte_cnt = Byte_Length(getCANID);
+  
+    //write system variable
+    @sysvar::K2XX::SysVarDataLength = byte_cnt;
+  
+//  write("DEBUG - message length = %d", byte_cnt);
+}

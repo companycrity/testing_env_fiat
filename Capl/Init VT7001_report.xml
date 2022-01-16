@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<testmodule starttime="2016-03-21 09:20:10" timestamp="   0.000000" verdicts="2_basic">
+  <verdict time="2016-03-21 09:20:11" timestamp="   0.600000" endtime="2016-03-21 09:20:11" endtimestamp="   0.600000" result="pass" />
+  <title>Init VT7001</title>
+  <testlogfiles>
+    <testlogfile file="" />
+  </testlogfiles>
+  <engineer>
+    <xinfo>
+      <name>Windows Login Name</name>
+      <description>PZ00M4</description>
+    </xinfo>
+  </engineer>
+  <testsetup>
+    <xinfo>
+      <name>Version</name>
+      <description>CANoe.LIN.XCP 8.5.98 (SP4)</description>
+    </xinfo>
+    <xinfo>
+      <name>Configuration</name>
+      <description>C:\FIASA\FIASA_testconfig_8.5\Canoe Config\Fiasa.cfg</description>
+    </xinfo>
+    <xinfo>
+      <name>Configuration Comment</name>
+      <description></description>
+    </xinfo>
+    <xinfo>
+      <name>Test Module Name</name>
+      <description>Init VT7001</description>
+    </xinfo>
+    <xinfo>
+      <name>Test Module File</name>
+      <description>C:\FIASA\FIASA_testconfig_8.5\Capl\Init VT7001.can</description>
+    </xinfo>
+    <xinfo>
+      <name>Last modification of Test Module File</name>
+      <description>2014-11-07, 10:56:46</description>
+    </xinfo>
+    <xinfo>
+      <name>Windows Computer Name</name>
+      <description>SAGL9H2QM12</description>
+    </xinfo>
+    <xinfo>
+      <name>Nodelayer Module CANoeILNLVector</name>
+      <description>CANoe Interaction Layer NL (Vector) Version 3.16.19 (Sep 15 2015 09:49:09) , C:\Program Files (x86)\Vector CANoe 8.5\Exec32\CANoeILNLVector.dll</description>
+    </xinfo>
+    <xinfo>
+      <name>Nodelayer Module osek_tp</name>
+      <description>OSEK_TP (VC10, Version 5.28.55, Build 55), C:\Program Files (x86)\Vector CANoe 8.5\Exec32\osek_tp.dll</description>
+    </xinfo>
+    <xinfo>
+      <name>Nodelayer Module CANOEILNLDEFAULT</name>
+      <description>CANoe Interaction Layer NL (Default) Version 3.16.19 (Sep 15 2015 09:26:50) , C:\Program Files (x86)\Vector CANoe 8.5\Exec32\CANOEILNLDEFAULT.DLL</description>
+    </xinfo>
+  </testsetup>
+  <hardware name="CAN Channel Interfaces" category="CategoryCANIF">
+    <xinfoset type="device">
+      <xinfoobject type="device">
+        <xinfo key="channel">
+          <name>Channel</name>
+          <description>1</description>
+        </xinfo>
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VN1640</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>3390</description>
+        </xinfo>
+        <xinfo key="driverdllversion">
+          <name>Driver DLL version</name>
+          <description>9.3.24</description>
+        </xinfo>
+        <xinfo key="driverversion">
+          <name>Driver version</name>
+          <description>9.3.24</description>
+        </xinfo>
+      </xinfoobject>
+      <xinfoobject type="device">
+        <xinfo key="channel">
+          <name>Channel</name>
+          <description>2</description>
+        </xinfo>
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VN1640</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>3390</description>
+        </xinfo>
+        <xinfo key="driverdllversion">
+          <name>Driver DLL version</name>
+          <description>9.3.24</description>
+        </xinfo>
+        <xinfo key="driverversion">
+          <name>Driver version</name>
+          <description>9.3.24</description>
+        </xinfo>
+      </xinfoobject>
+    </xinfoset>
+  </hardware>
+  <hardware name="VT-System" category="vtsystem">
+    <xinfoset type="device">
+      <xinfoobject type="device">
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VT8012</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>712</description>
+        </xinfo>
+        <xinfo key="firmwareversion">
+          <name>Firmware version</name>
+          <description>0.0.0</description>
+        </xinfo>
+        <xinfo key="hardwareversion">
+          <name>Hardware version</name>
+          <description>0x10</description>
+        </xinfo>
+      </xinfoobject>
+      <xinfoobject type="device">
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VT7001A</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>254</description>
+        </xinfo>
+        <xinfo key="firmwareversion">
+          <name>Firmware version</name>
+          <description>2.0.5</description>
+        </xinfo>
+        <xinfo key="hardwareversion">
+          <name>Hardware version</name>
+          <description>0x10</description>
+        </xinfo>
+      </xinfoobject>
+      <xinfoobject type="device">
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VT2516A</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>225</description>
+        </xinfo>
+        <xinfo key="firmwareversion">
+          <name>Firmware version</name>
+          <description>2.1.4</description>
+        </xinfo>
+        <xinfo key="hardwareversion">
+          <name>Hardware version</name>
+          <description>0x0</description>
+        </xinfo>
+      </xinfoobject>
+      <xinfoobject type="device">
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VT2004A</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>262</description>
+        </xinfo>
+        <xinfo key="firmwareversion">
+          <name>Firmware version</name>
+          <description>2.1.0</description>
+        </xinfo>
+        <xinfo key="hardwareversion">
+          <name>Hardware version</name>
+          <description>0x0</description>
+        </xinfo>
+      </xinfoobject>
+      <xinfoobject type="device">
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VT2004A</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>336</description>
+        </xinfo>
+        <xinfo key="firmwareversion">
+          <name>Firmware version</name>
+          <description>2.1.0</description>
+        </xinfo>
+        <xinfo key="hardwareversion">
+          <name>Hardware version</name>
+          <description>0x0</description>
+        </xinfo>
+      </xinfoobject>
+      <xinfoobject type="device">
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VT2004A</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>337</description>
+        </xinfo>
+        <xinfo key="firmwareversion">
+          <name>Firmware version</name>
+          <description>2.1.0</description>
+        </xinfo>
+        <xinfo key="hardwareversion">
+          <name>Hardware version</name>
+          <description>0x0</description>
+        </xinfo>
+      </xinfoobject>
+      <xinfoobject type="device">
+        <xinfo key="device">
+          <name>Device</name>
+          <description>VT2004A</description>
+        </xinfo>
+        <xinfo key="serialnumber">
+          <name>Serial number</name>
+          <description>335</description>
+        </xinfo>
+        <xinfo key="firmwareversion">
+          <name>Firmware version</name>
+          <description>2.1.0</description>
+        </xinfo>
+        <xinfo key="hardwareversion">
+          <name>Hardware version</name>
+          <description>0x0</description>
+        </xinfo>
+      </xinfoobject>
+    </xinfoset>
+  </hardware>
+</testmodule>
+<!--footprint="4f6fca609c8c854b1647a1fa4c8a6d22" version="1"-->

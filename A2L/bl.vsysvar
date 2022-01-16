@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<systemvariables version="4">
+  <namespace name="" comment="">
+    <namespace name="_Statistics" comment="">
+      <namespace name="CAN1" comment="Bus Statistic Variables for Channel CAN1">
+        <variable anlyzLocal="1" readOnly="false" valueSequence="false" unit="%" name="CANBusload" comment="" bitcount="64" isSigned="true" encoding="65001" type="float" minValue="0" maxValue="100" />
+      </namespace>
+    </namespace>
+  </namespace>
+</systemvariables>

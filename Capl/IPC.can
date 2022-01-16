@@ -1,0 +1,29 @@
+/*@!Encoding:1252*/
+variables
+{
+ 
+}
+
+on start
+{
+
+  //ILNodeControlStart(1);
+
+//GMILActivateVN(1);
+  //GMILActivateVN(1);
+//IlActivateVN(1);
+  ILActivateClamp15();
+  
+  
+  
+}
+
+on sysvar MESSAGES::pnlSTATUS_C_IPC_disable
+{
+   if (@MESSAGES::pnlSTATUS_C_IPC_disable == 1)
+      ILDisableMsg("STATUS_C_IPC");
+    else
+      ILEnableMsg("STATUS_C_IPC");
+        
+}
+
